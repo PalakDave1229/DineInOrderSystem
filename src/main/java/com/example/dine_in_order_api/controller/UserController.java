@@ -23,15 +23,14 @@ public class UserController {
     }
 
     //find by id
-//    @GetMapping
-//    public ResponseEntity<ResponseStructure<User>> findById(int id) {
-//        User user ;
-//        return ResponseBuilder.success(user,HttpStatus.CREATED,"Data Stored !!");
-//    }
+    @GetMapping("/fetch")
+    public ResponseEntity<ResponseStructure<User>> findById( Long id) {
+        User user = userService.findById(id);
+        return ResponseBuilder.success(user,HttpStatus.FOUND,"Data Fetched !!");
+    }
 
 
     //update by id
-
 
 
 }

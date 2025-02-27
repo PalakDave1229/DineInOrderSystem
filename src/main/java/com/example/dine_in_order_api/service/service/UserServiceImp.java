@@ -26,12 +26,11 @@ public class UserServiceImp implements UserService{
         return userRepository.save(user2);
     }
 
-//    @Override
-//    public User findById(Long id) {
-//
-//        Optional<User> user = userRepository.findById(id);
-//        return user.get();
-//    }
+    @Override
+    public User findById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.get();
+    }
 
     private  User getUser(UserRole role) {
         User user2;

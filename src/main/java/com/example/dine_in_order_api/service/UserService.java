@@ -6,5 +6,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
     public User registration(User user);
-    //public User findById(Long id);
+    public User findById(Long id);
 }
