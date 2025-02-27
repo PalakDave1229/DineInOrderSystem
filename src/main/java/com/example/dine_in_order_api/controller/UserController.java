@@ -1,9 +1,11 @@
-package com.gitDemo.demo.controller;
+package com.example.dine_in_order_api.controller;
 
-import com.gitDemo.demo.model.User;
-import com.gitDemo.demo.service.UserService;
-import com.gitDemo.demo.utility.ResponseStructure;
+import com.example.dine_in_order_api.model.User;
+import com.example.dine_in_order_api.service.UserService;
+import com.example.dine_in_order_api.utility.ResponseBuilder;
+import com.example.dine_in_order_api.utility.ResponseStructure;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +19,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping
-    public ResponseEntity<ResponseStructure<User>> addUser(@RequestBody User user) {
-        return userService.addUser(user);
+    @PostMapping("/registration")
+    public ResponseEntity<ResponseStructure<User>> registration(@RequestBody User user) {
+        user = userService.registration(user);
+        return ResponseBuilder.success(user,HttpStatus.CREATED,"Data Stored !!");
     }
 }

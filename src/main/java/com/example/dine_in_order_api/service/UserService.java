@@ -1,9 +1,9 @@
-package com.gitDemo.demo.service;
+package com.example.dine_in_order_api.service;
 
-import com.gitDemo.demo.model.User;
-import com.gitDemo.demo.utility.ResponseStructure;
+import com.example.dine_in_order_api.model.User;
+import com.example.dine_in_order_api.utility.ResponseStructure;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    public ResponseEntity<ResponseStructure<User>> addUser(User user);
+    public User registration(User user);
 }
