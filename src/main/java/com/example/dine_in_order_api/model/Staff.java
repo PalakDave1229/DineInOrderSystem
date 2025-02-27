@@ -9,6 +9,6 @@ import lombok.Setter;
 @Table(name="staffs")
 @Getter
 @Setter
-public class Staff {
+public class Staff extends User {
 
 }

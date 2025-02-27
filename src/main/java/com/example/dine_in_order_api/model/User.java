@@ -30,9 +30,10 @@ public class User {
     private String password;
 
     @Column(name = "ph_no")
-    private int phno;
+    private String phno;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private UserRole userrole;
 
     @Column(name = "created_at")
