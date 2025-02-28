@@ -1,6 +1,7 @@
 package com.example.dine_in_order_api.service.service;
 
 import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.enums.UserRole;
 import com.example.dine_in_order_api.exception.UserNotFoundException;
@@ -12,8 +13,6 @@ import com.example.dine_in_order_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserServiceImp implements UserService{
@@ -52,11 +51,11 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public UserResponce updateById(User user, Long userId) {
-         User userRes =userRepository.findById(userId)
+    public UserResponce updateById(UserRequest userRes, Long userId) {
+         User user =userRepository.findById(userId)
                  .orElseThrow(() -> new UserNotFoundException("User Not found to update"));
-         mapToUser(user,userRes);
-          return mapToUserResponce(userRepository.save(userRes));
+         mapToUser(userRes,user);
+          return mapToUserResponce(userRepository.save(user));
     }
 
     private  User getUser(UserRole role) {
@@ -67,6 +66,12 @@ public class UserServiceImp implements UserService{
             default -> throw new RuntimeException("Failed to register user, Invaild user type");
         }
         return user2;
+    }
+
+    private void mapToUser(UserRequest sourse,User target){
+        target.setEmail(sourse.getEmail());
+        target.setPhno(sourse.getPhno());
+        target.setUsername(sourse.getUsername());
     }
 
     private  void mapToUser(User source, User target) {
