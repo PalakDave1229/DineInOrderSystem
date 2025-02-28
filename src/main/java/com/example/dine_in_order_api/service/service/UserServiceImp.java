@@ -5,6 +5,7 @@ import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.enums.UserRole;
 import com.example.dine_in_order_api.exception.UserNotFoundException;
+import com.example.dine_in_order_api.mapper.UserMapper;
 import com.example.dine_in_order_api.model.Admin;
 import com.example.dine_in_order_api.model.Staff;
 import com.example.dine_in_order_api.model.User;
@@ -24,41 +25,25 @@ public class UserServiceImp implements UserService{
     public UserResponce registration(RegistrationRequest registrationRequest) {
         User user = this.getUser(registrationRequest.getUserrole());
         System.out.println(user.getUserrole());
-        this.mapToUserEntity(registrationRequest, user);
-        return mapToUserResponce(userRepository.save(user));
-    }
-
-    private UserResponce mapToUserResponce(User source) {
-        return  UserResponce.builder()
-                .username(source.getUsername())
-                .userid(source.getUserid())
-                .userrole(source.getUserrole())
-                .build();
-    }
-
-    private void mapToUserEntity( RegistrationRequest source,User target) {
-        target.setEmail(source.getEmail());
-        target.setPhno(source.getPhno());
-        target.setUsername(source.getUsername());
-        target.setPassword(source.getPassword());
-        target.setUserrole(source.getUserrole());
+        UserMapper.mapToUserEntity(registrationRequest, user);
+        return UserMapper.mapToUserResponce(userRepository.save(user));
     }
 
     @Override
     public UserResponce findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found ,Invaild User Id"));
-        return mapToUserResponce(user);
+        return UserMapper.mapToUserResponce(user);
     }
 
     @Override
     public UserResponce updateById(UserRequest userRes, Long userId) {
          User user =userRepository.findById(userId)
-                 .orElseThrow(() -> new UserNotFoundException("User Not found to update"));
-         mapToUser(userRes,user);
-          return mapToUserResponce(userRepository.save(user));
+                   .orElseThrow(() -> new UserNotFoundException("User Not found to update"));
+         UserMapper.mapToUser(userRes,user);
+         return UserMapper.mapToUserResponce(userRepository.save(user));
     }
 
-    private  User getUser(UserRole role) {
+    private User getUser(UserRole role) {
         User user2;
         switch(role){
             case ADMIN ->user2 = new Admin();
@@ -66,19 +51,5 @@ public class UserServiceImp implements UserService{
             default -> throw new RuntimeException("Failed to register user, Invaild user type");
         }
         return user2;
-    }
-
-    private void mapToUser(UserRequest sourse,User target){
-        target.setEmail(sourse.getEmail());
-        target.setPhno(sourse.getPhno());
-        target.setUsername(sourse.getUsername());
-    }
-
-    private  void mapToUser(User source, User target) {
-        target.setEmail(source.getEmail());
-        target.setPhno(source.getPhno());
-        target.setPassword(source.getPassword());
-        target.setUsername(source.getUsername());
-        target.setUserrole(source.getUserrole());
     }
 }
