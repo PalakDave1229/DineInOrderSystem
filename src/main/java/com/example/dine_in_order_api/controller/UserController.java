@@ -1,6 +1,7 @@
 package com.example.dine_in_order_api.controller;
 
 import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.model.User;
 import com.example.dine_in_order_api.service.UserService;
@@ -36,7 +37,7 @@ public class UserController {
 
     //update by id
     @PutMapping("/update")
-    public ResponseEntity<ResponseStructure<UserResponce>> updateById(@RequestBody User user,@RequestParam Long userId){
+    public ResponseEntity<ResponseStructure<UserResponce>> updateById(@RequestBody UserRequest user, @RequestParam Long userId){
         UserResponce userRes = userService.updateById(user,userId);
         return ResponseBuilder.success(userRes,HttpStatus.OK,"Data Updated");
     }
