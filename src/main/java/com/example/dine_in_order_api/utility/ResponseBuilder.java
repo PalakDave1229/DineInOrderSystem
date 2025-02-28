@@ -26,5 +26,15 @@ public class ResponseBuilder {
                 .body(res);
 
     }
+    public static ResponseEntity<SimpleErrorStructure> simpleError(String message, HttpStatus httpStatus) {
+        SimpleErrorStructure simpleErrorStructure = SimpleErrorStructure.builder()
+                .code(httpStatus.value())
+                .message(message)
+                .type(httpStatus.name())
+                .build();
+        return ResponseEntity
+                .status(httpStatus)
+                .body(simpleErrorStructure);
+    }
 
 }
