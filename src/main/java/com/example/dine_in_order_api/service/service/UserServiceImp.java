@@ -1,6 +1,9 @@
 package com.example.dine_in_order_api.service.service;
 
+import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.enums.UserRole;
+import com.example.dine_in_order_api.exception.UserNotFoundException;
 import com.example.dine_in_order_api.model.Admin;
 import com.example.dine_in_order_api.model.Staff;
 import com.example.dine_in_order_api.model.User;
@@ -19,17 +22,41 @@ public class UserServiceImp implements UserService{
     UserRepository userRepository;
 
     @Override
-    public User registration(User user) {
+    public UserResponce registration(RegistrationRequest registrationRequest) {
+        User user = this.getUser(registrationRequest.getUserrole());
+        System.out.println(user.getUserrole());
+        this.mapToUserEntity(registrationRequest, user);
+        return mapToUserResponce(userRepository.save(user));
+    }
 
-        User user2 = this.getUser(user.getUserrole());
-        this.mapToUser(user, user2);
-        return userRepository.save(user2);
+    private UserResponce mapToUserResponce(User source) {
+        return  UserResponce.builder()
+                .username(source.getUsername())
+                .userid(source.getUserid())
+                .userrole(source.getUserrole())
+                .build();
+    }
+
+    private void mapToUserEntity( RegistrationRequest source,User target) {
+        target.setEmail(source.getEmail());
+        target.setPhno(source.getPhno());
+        target.setUsername(source.getUsername());
+        target.setPassword(source.getPassword());
+        target.setUserrole(source.getUserrole());
     }
 
     @Override
-    public User findById(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.get();
+    public UserResponce findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found ,Invaild User Id"));
+        return mapToUserResponce(user);
+    }
+
+    @Override
+    public UserResponce updateById(User user, Long userId) {
+         User userRes =userRepository.findById(userId)
+                 .orElseThrow(() -> new UserNotFoundException("User Not found to update"));
+         mapToUser(user,userRes);
+          return mapToUserResponce(userRepository.save(userRes));
     }
 
     private  User getUser(UserRole role) {
@@ -42,11 +69,11 @@ public class UserServiceImp implements UserService{
         return user2;
     }
 
-    private  void mapToUser(User user, User user2) {
-        user2.setEmail(user.getEmail());
-        user2.setPhno(user.getPhno());
-        user2.setPassword(user.getPassword());
-        user2.setUsername(user.getUsername());
-        user2.setUserrole(user.getUserrole());
+    private  void mapToUser(User source, User target) {
+        target.setEmail(source.getEmail());
+        target.setPhno(source.getPhno());
+        target.setPassword(source.getPassword());
+        target.setUsername(source.getUsername());
+        target.setUserrole(source.getUserrole());
     }
 }

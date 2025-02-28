@@ -1,10 +1,11 @@
 package com.example.dine_in_order_api.service;
 
+import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.model.User;
-import com.example.dine_in_order_api.utility.ResponseStructure;
-import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    public User registration(User user);
-    public User findById(Long id);
+    public UserResponce registration(RegistrationRequest registrationRequest);
+    public UserResponce findById(Long id);
+    public UserResponce updateById(User user, Long userId);
 }

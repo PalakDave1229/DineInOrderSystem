@@ -1,5 +1,7 @@
 package com.example.dine_in_order_api.controller;
 
+import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.model.User;
 import com.example.dine_in_order_api.service.UserService;
 import com.example.dine_in_order_api.utility.ResponseBuilder;
@@ -17,20 +19,25 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/registration")
-    public ResponseEntity<ResponseStructure<User>> registration(@RequestBody User user) {
-        user = userService.registration(user);
-        return ResponseBuilder.success(user,HttpStatus.CREATED,"Data Stored !!");
+    public ResponseEntity<ResponseStructure<UserResponce>> registration(@RequestBody RegistrationRequest registrationRequest) {
+        System.out.println(registrationRequest.getEmail());
+        System.out.println(registrationRequest.getUserrole());
+        UserResponce registratin = userService.registration(registrationRequest);
+        return ResponseBuilder.success(registratin,HttpStatus.CREATED,"Data Stored !!");
     }
 
     //find by id
     @GetMapping("/fetch")
-    public ResponseEntity<ResponseStructure<User>> findById( Long id) {
-        User user = userService.findById(id);
+    public ResponseEntity<ResponseStructure<UserResponce>> findById(@RequestParam Long id) {
+        UserResponce user = userService.findById(id);
         return ResponseBuilder.success(user,HttpStatus.FOUND,"Data Fetched !!");
     }
 
 
     //update by id
-
-
+    @PutMapping("/update")
+    public ResponseEntity<ResponseStructure<UserResponce>> updateById(@RequestBody User user,@RequestParam Long userId){
+        UserResponce userRes = userService.updateById(user,userId);
+        return ResponseBuilder.success(userRes,HttpStatus.OK,"Data Updated");
+    }
 }
