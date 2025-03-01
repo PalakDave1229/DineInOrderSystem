@@ -7,6 +7,7 @@ import com.example.dine_in_order_api.model.User;
 import com.example.dine_in_order_api.service.UserService;
 import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,10 @@ public class UserController {
     @Autowired
     UserService userService;
 
+
     @PostMapping("/registration")
-    public ResponseEntity<ResponseStructure<UserResponce>> registration(@RequestBody RegistrationRequest registrationRequest) {
-        System.out.println(registrationRequest.getEmail());
-        System.out.println(registrationRequest.getUserrole());
+    public ResponseEntity<ResponseStructure<UserResponce>> registration(@Valid @RequestBody  RegistrationRequest registrationRequest) {
+        System.out.println("user name :"+registrationRequest.getUsername());
         UserResponce registratin = userService.registration(registrationRequest);
         return ResponseBuilder.success(registratin,HttpStatus.CREATED,"Data Stored !!");
     }
@@ -34,10 +35,9 @@ public class UserController {
         return ResponseBuilder.success(user,HttpStatus.FOUND,"Data Fetched !!");
     }
 
-
     //update by id
     @PutMapping("/update")
-    public ResponseEntity<ResponseStructure<UserResponce>> updateById(@RequestBody UserRequest user, @RequestParam Long userId){
+    public ResponseEntity<ResponseStructure<UserResponce>> updateById(@RequestBody @Valid UserRequest user, @RequestParam Long userId){
         UserResponce userRes = userService.updateById(user,userId);
         return ResponseBuilder.success(userRes,HttpStatus.OK,"Data Updated");
     }
