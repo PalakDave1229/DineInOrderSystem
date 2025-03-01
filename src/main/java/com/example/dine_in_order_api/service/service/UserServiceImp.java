@@ -20,27 +20,29 @@ public class UserServiceImp implements UserService{
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public UserResponce registration(RegistrationRequest registrationRequest) {
         User user = this.getUser(registrationRequest.getUserrole());
         System.out.println(user.getUserrole());
-        UserMapper.mapToUserEntity(registrationRequest, user);
-        return UserMapper.mapToUserResponce(userRepository.save(user));
+        userMapper.mapToUserEntity(registrationRequest, user);
+        return userMapper.mapToUserResponce(userRepository.save(user));
     }
 
     @Override
     public UserResponce findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found ,Invaild User Id"));
-        return UserMapper.mapToUserResponce(user);
+        return userMapper.mapToUserResponce(user);
     }
 
     @Override
     public UserResponce updateById(UserRequest userRes, Long userId) {
          User user =userRepository.findById(userId)
                    .orElseThrow(() -> new UserNotFoundException("User Not found to update"));
-         UserMapper.mapToUser(userRes,user);
-         return UserMapper.mapToUserResponce(userRepository.save(user));
+         userMapper.mapToUser(userRes,user);
+         return userMapper.mapToUserResponce(userRepository.save(user));
     }
 
     private User getUser(UserRole role) {
