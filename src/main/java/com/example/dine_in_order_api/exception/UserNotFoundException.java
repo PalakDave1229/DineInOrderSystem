@@ -9,5 +9,4 @@ public class UserNotFoundException extends RuntimeException {
     public String getMessage(){
         return this.message;
     }
-
 }
