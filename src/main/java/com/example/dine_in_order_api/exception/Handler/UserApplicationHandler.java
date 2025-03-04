@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class UserApplicationHandler{
 
     @ExceptionHandler
-    public ResponseEntity<SimpleErrorStructure> setUserNotFoundError(UserNotFoundException e){
+    public ResponseEntity<SimpleErrorStructure> handleUserNotFoundError(UserNotFoundException e){
         return ResponseBuilder.simpleError(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
