@@ -14,18 +14,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1")
+@AllArgsConstructor
+@RequestMapping("${app.base-url}")
 @Tag(name ="User controller", description = "Collection of API Endpoints for User Management")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+
+    private UserService userService;
 
 
     @PostMapping("/registration")
