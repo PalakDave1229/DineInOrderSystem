@@ -7,27 +7,46 @@ import com.example.dine_in_order_api.model.User;
 import com.example.dine_in_order_api.service.UserService;
 import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
+import com.example.dine_in_order_api.utility.ValidationErrorsStructure;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@AllArgsConstructor
+@RequestMapping("${app.base-url}")
+@Tag(name ="User controller", description = "Collection of API Endpoints for User Management")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+
+    private UserService userService;
 
 
     @PostMapping("/registration")
+    @Operation(description = """
+            The API Endpoint is used to register user.
+            The endpoints requires the user to select one of the specified role along with the other details
+            """,
+            responses = {
+                    @ApiResponse(responseCode = "201",description = "User Created"),
+                    @ApiResponse(responseCode = "401", description = "Invalid Input", content = {
+                            @Content(schema = @Schema(implementation = ValidationErrorsStructure.class))
+                    })
+            }
+    )
     public ResponseEntity<ResponseStructure<UserResponce>> registration(@Valid @RequestBody  RegistrationRequest registrationRequest) {
         System.out.println("user name :"+registrationRequest.getUsername());
-        UserResponce registratin = userService.registration(registrationRequest);
-        return ResponseBuilder.success(registratin,HttpStatus.CREATED,"Data Stored !!");
+        UserResponce registration = userService.registration(registrationRequest);
+        return ResponseBuilder.success(registration,HttpStatus.CREATED,"Data Stored !!");
     }
-
     //find by id
     @GetMapping("/fetch")
     public ResponseEntity<ResponseStructure<UserResponce>> findById(@RequestParam Long id) {
