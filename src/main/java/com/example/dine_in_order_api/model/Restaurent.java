@@ -31,7 +31,6 @@ public class Restaurent {
     @Column(name = "open_at")
     private LocalDateTime opensAt;
 
-
     @Column(name = "close_at")
     private LocalDateTime closeAt;
 
