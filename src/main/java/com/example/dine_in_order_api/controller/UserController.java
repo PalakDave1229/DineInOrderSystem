@@ -45,19 +45,31 @@ public class UserController {
     public ResponseEntity<ResponseStructure<UserResponce>> registration(@Valid @RequestBody  RegistrationRequest registrationRequest) {
         System.out.println("user name :"+registrationRequest.getUsername());
         UserResponce registration = userService.registration(registrationRequest);
-        return ResponseBuilder.success(registration,HttpStatus.CREATED,"Data Stored !!");
+        return ResponseBuilder.created(registration,"Data Stored !!");
     }
     //find by id
     @GetMapping("/fetch")
     public ResponseEntity<ResponseStructure<UserResponce>> findById(@RequestParam Long id) {
         UserResponce user = userService.findById(id);
-        return ResponseBuilder.success(user,HttpStatus.FOUND,"Data Fetched !!");
+        return ResponseBuilder.ok(user,"Data Fetched !!");
     }
 
     //update by id
+
     @PutMapping("/update")
+    @Operation(description = """
+            The API Endpoint is used to update user details.
+            The endpoints requires the user to select one of the specified role along with the other details.            
+            """,
+            responses = {
+                    @ApiResponse(responseCode = "200" ,description = "User Updated"),
+                    @ApiResponse(responseCode = "401" , description = "Invaild Input" , content = {
+                            @Content(schema = @Schema(implementation = ValidationErrorsStructure.class))
+                    })
+            }
+    )
     public ResponseEntity<ResponseStructure<UserResponce>> updateById(@RequestBody @Valid UserRequest user, @RequestParam Long userId){
         UserResponce userRes = userService.updateById(user,userId);
-        return ResponseBuilder.success(userRes,HttpStatus.OK,"Data Updated");
+        return ResponseBuilder.ok(userRes,"Data Updated");
     }
 }

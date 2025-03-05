@@ -26,7 +26,6 @@ public class UserServiceImp implements UserService{
     @Override
     public UserResponce registration(RegistrationRequest registrationRequest) {
         User user = this.getUser(registrationRequest.getUserrole());
-        System.out.println(user.getUserrole());
         userMapper.mapToUserEntity(registrationRequest, user);
         return userMapper.mapToUserResponce(userRepository.save(user));
     }
@@ -44,6 +43,14 @@ public class UserServiceImp implements UserService{
          userMapper.mapToUser(userRes,user);
          return userMapper.mapToUserResponce(userRepository.save(user));
     }
+
+    /**
+     *
+     * produce and return child instance of the user based on the user role
+     *
+     * @param role role of the user
+     * @return User the parent reference containing either of STAFF or ADMIN instance
+     */
 
     private User getUser(UserRole role) {
         User user2;

@@ -9,6 +9,17 @@ import org.springframework.web.servlet.function.ServerRequest;
 import java.util.List;
 
 public class ResponseBuilder {
+
+    /**
+     *
+     * helps to generate ResponseEntity to sends response
+     *
+     * @param data is generic object to send in response
+     * @param httpStatus is status code of http response
+     * @param message message for response
+     * @return ResponseEntity to sends response
+     */
+
     public static <T> ResponseEntity<ResponseStructure<T>> success(T data, HttpStatus httpStatus, String message) {
         ResponseStructure<T> res = ResponseStructure.<T>builder()
                 .message(message)
@@ -17,6 +28,18 @@ public class ResponseBuilder {
                 .build();
         return ResponseEntity.status(httpStatus).body(res);
     }
+
+    /**
+     *
+     *  helps to generate ResponseEntity to sends response with header details
+     *
+     * @param data is generic object to send in response
+     * @param httpStatus is status code of http response
+     * @param message message for response
+     * @param headers set headers in response entity
+     * @return
+     */
+
     public static <T> ResponseEntity<ResponseStructure<T>> success(T data, HttpStatus httpStatus, String message, HttpHeaders headers) {
         ResponseStructure<T> res =  ResponseStructure.<T>builder()
                 .message(message)
@@ -28,6 +51,45 @@ public class ResponseBuilder {
                 .body(res);
 
     }
+
+    /**
+     * helps creating the ok method for success response with
+     * data including the httpstatus code , message and data itself
+     *
+     * @param data generalize data object to send response with responseEntity
+     * @param message success message to send response with responseEntity
+     * @return it return the responseEntity of responseStructure of generic object
+     *         for proper response with ok httpStatusCode
+     */
+
+    public static <T> ResponseEntity<ResponseStructure<T>> ok(T data,String message){
+        return success(data,HttpStatus.OK,message);
+    }
+
+
+    /**
+     * helps creating the created method for success response with
+     * data including the httpstatus code , message and data itself
+     *
+     * @param data generalize data object to send response with responseEntity
+     * @param message success message to send response with responseEntity
+     * @return it return the responseEntity of responseStructure of generic object
+     *         for proper response with created httpStatusCode
+     */
+
+    public static <T> ResponseEntity<ResponseStructure<T>> created(T data,String message){
+        return success(data,HttpStatus.CREATED,message);
+    }
+
+    /**
+     *
+     * user to structure the responseEntity for response with simple error
+     *
+     * @param message error message for response
+     * @param httpStatus is status code of http response
+     * @return ResponseEntity of errorStructure
+     */
+
     public static ResponseEntity<SimpleErrorStructure> simpleError(String message, HttpStatus httpStatus) {
         SimpleErrorStructure simpleErrorStructure = SimpleErrorStructure.builder()
                 .code(httpStatus.value())
@@ -39,6 +101,19 @@ public class ResponseBuilder {
                 .body(simpleErrorStructure);
     }
 
+
+    /**
+     * helps creating the create method for error response with
+     * data including the httpstatus code , message and data itself
+     *
+     * @param message success message to send response with responseEntity
+     * @return it return the responseEntity of responseStructure of generic
+     *         object for proper response with created httpStatusCode
+     */
+    public static <T> ResponseEntity<SimpleErrorStructure> notFound(String message){
+        return simpleError(message,HttpStatus.NOT_FOUND);
+    }
+
     public static ValidationErrorsStructure ValidationError(HttpStatus httpStatus , String message , List<ValidationErrorsStructure.Errors> errors){
           return ValidationErrorsStructure.builder()
                 .code(httpStatus.value())
@@ -47,5 +122,7 @@ public class ResponseBuilder {
                 .errors(errors)
                 .build();
     }
+
+
 
 }
