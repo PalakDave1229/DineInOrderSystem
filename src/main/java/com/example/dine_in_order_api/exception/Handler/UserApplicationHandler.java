@@ -13,7 +13,6 @@ public class UserApplicationHandler{
 
     @ExceptionHandler
     public ResponseEntity<SimpleErrorStructure> handleUserNotFoundError(UserNotFoundException e){
-        return ResponseBuilder.simpleError(e.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseBuilder.notFound(e.getMessage());
     }
-
 }
