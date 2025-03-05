@@ -25,6 +25,9 @@ public class Restaurent {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "Phone_no")
+    private String contactNumber;
+
     @Column(name = "email")
     private String contactEmail;
 
