@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -41,13 +42,13 @@ public class Restaurent {
     private DietType dietType;
 
     @Column(name = "created_at")
-    private LocalDate createdat;
+    private LocalDate createdAt;
 
     @Column(name = "last_modified_at")
-    private LocalDateTime lastmodifiedat;
+    private LocalDateTime lastModifiedAt;
 
     @ManyToOne
     private Admin admin;
     @ManyToMany(mappedBy = "restaurent",fetch = FetchType.EAGER)
-    private CuisineType cuisineType;
+    private List<CuisineType> cuisineType;
 }

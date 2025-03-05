@@ -7,10 +7,12 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Table(name="admins")
 @Getter
 @Setter
 public class Admin extends User{
     @OneToMany(mappedBy = "admin")
-    private Restaurent restaurent;
+    private List<Restaurent> restaurent;
 }

@@ -7,15 +7,18 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Table(name = "CuisineType")
 public class CuisineType {
 
-    @ManyToMany
-    private Restaurent restaurent;
-
     @Id
     @Column(name = "cuisine")
     private String cuisine;
+
+    @ManyToMany
+    private List<Restaurent> restaurent;
+
 }
