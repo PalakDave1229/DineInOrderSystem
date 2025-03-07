@@ -1,6 +1,7 @@
 package com.example.dine_in_order_api.service;
 
-import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+
+import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
 
@@ -14,7 +15,7 @@ public interface UserService {
      * @param registrationRequest it contains data of user to register with restriction using DTO class
      * @return the data which stored in entity with the restriction of userResponce class
      */
-    public UserResponce registration(RegistrationRequest registrationRequest);
+    public UserResponce registration(UserRegistrationRequest registrationRequest);
 
 
     /**

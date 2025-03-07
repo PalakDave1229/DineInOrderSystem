@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegistrationRequest {
+public class UserRegistrationRequest {
     @NotEmpty(message = "Username can not be null or blank !!")
     @NotBlank(message = "Username can not be blank !!")
     @Pattern(regexp = "^[a-zA-Z0-9_]+$" , message = "User can only contain Alphabets , Number and UnderScore")
