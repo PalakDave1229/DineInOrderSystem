@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
+
 @ControllerAdvice
 public class UserApplicationHandler{
 
@@ -15,4 +17,11 @@ public class UserApplicationHandler{
     public ResponseEntity<SimpleErrorStructure> handleUserNotFoundError(UserNotFoundException e){
         return ResponseBuilder.notFound(e.getMessage());
     }
+
+    @ExceptionHandler
+    public ResponseEntity<SimpleErrorStructure> handleAccessDeniedException(AccessDeniedException e){
+        return ResponseBuilder.notFound(e.getMessage());
+    }
+
+
 }

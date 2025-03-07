@@ -17,7 +17,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 @Component
 public interface RestaurantMapper {
-
       /**
        *
        * used for set restaurantRequest (DTO class to update) data in user object
@@ -25,6 +24,7 @@ public interface RestaurantMapper {
        * @param restaurantRequest DTO class with updated restaurant details
        * @return restaurent object with RestaurantRequest data
        */
+
       Restaurent mapToRestaurantEntity(RestaurantRequest restaurantRequest);
 
       /**
@@ -33,6 +33,7 @@ public interface RestaurantMapper {
        * @param value cuisine type getting in string type
        * @return object of cuisine with string name
        */
+
       default CuisineType mapToCuisineType(String value) {
             if(value == null) {
                   return null;
@@ -50,17 +51,20 @@ public interface RestaurantMapper {
        * @param value cuisineType object with name
        * @return cuisine name as string
        */
+
       default String mapToString(CuisineType value) {
             if(value == null) {
                   return null;
             }
             else return value.getCuisine();
       }
+
       /**
        * create and return structure of restaurentResponse using user object details
        *
        * @param restaurent user entity object
        * @return restaurentResponse object to send restricted attribute
        */
+
       RestaurestResponse mapToRestaurantResponce(Restaurent restaurent);
 }

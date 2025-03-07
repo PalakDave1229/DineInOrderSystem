@@ -16,7 +16,7 @@ public class CuisineType {
     @Column(name = "cuisine")
     private String cuisine;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "cuisineTypes")
     private List<Restaurent> restaurents;
 
 }

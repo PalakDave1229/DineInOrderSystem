@@ -28,7 +28,7 @@ public class UserController {
     private UserService userService;
 
 
-    @PostMapping("/registration")
+    @PostMapping("/User")
     @Operation(description = """
             The API Endpoint is used to register user.
             The endpoints requires the user to select one of the specified role along with the other details
@@ -46,7 +46,7 @@ public class UserController {
         return ResponseBuilder.created(registration,"Data Stored !!");
     }
     //find by id
-    @GetMapping("/fetch")
+    @GetMapping("/User")
     public ResponseEntity<ResponseStructure<UserResponce>> findById(@RequestParam Long id) {
         UserResponce user = userService.findById(id);
         return ResponseBuilder.ok(user,"Data Fetched !!");
@@ -54,7 +54,7 @@ public class UserController {
 
     //update by id
 
-    @PutMapping("/update")
+    @PutMapping("/User")
     @Operation(description = """
             The API Endpoint is used to update user details.
             The endpoints requires the user to select one of the specified role along with the other details.            
