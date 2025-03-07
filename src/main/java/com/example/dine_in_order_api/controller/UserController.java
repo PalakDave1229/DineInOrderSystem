@@ -1,9 +1,9 @@
 package com.example.dine_in_order_api.controller;
 
-import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+
+import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
-import com.example.dine_in_order_api.model.User;
 import com.example.dine_in_order_api.service.UserService;
 import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
@@ -15,8 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +40,7 @@ public class UserController {
                     })
             }
     )
-    public ResponseEntity<ResponseStructure<UserResponce>> registration(@Valid @RequestBody  RegistrationRequest registrationRequest) {
+    public ResponseEntity<ResponseStructure<UserResponce>> registration(@Valid @RequestBody UserRegistrationRequest registrationRequest) {
         System.out.println("user name :"+registrationRequest.getUsername());
         UserResponce registration = userService.registration(registrationRequest);
         return ResponseBuilder.created(registration,"Data Stored !!");

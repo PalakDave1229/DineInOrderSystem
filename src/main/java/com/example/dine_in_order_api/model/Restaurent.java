@@ -18,7 +18,7 @@ public class Restaurent {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column(name = "restaurant_id")
-        private long restaurantId;
+    private long restaurantId;
 
     @Column(name = "restaurant_name")
     private String name;
@@ -27,7 +27,7 @@ public class Restaurent {
     private String address;
 
     @Column(name = "Phone_no")
-        private String contactNumber;
+    private String contactNumber;
 
     @Column(name = "email")
     private String contactEmail;
@@ -40,7 +40,7 @@ public class Restaurent {
 
     @Enumerated
     @Column(name = "diet_type")
-    private List<DietType> dietType;
+    private List<DietType> dietTypes;
 
     @Column(name = "created_at")
     private LocalDate createdAt;
@@ -50,6 +50,6 @@ public class Restaurent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Admin admin;
-    @ManyToMany(mappedBy = "restaurent",fetch = FetchType.EAGER)
-    private List<CuisineType> cuisineType;
+    @ManyToMany(mappedBy = "restaurents",fetch = FetchType.EAGER)
+    private List<CuisineType> cuisineTypes;
 }

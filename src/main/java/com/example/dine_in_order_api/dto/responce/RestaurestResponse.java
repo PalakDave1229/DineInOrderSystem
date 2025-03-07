@@ -18,8 +18,8 @@ public class RestaurestResponse {
     private String contactEmail;
     private LocalDateTime opensAt;
     private LocalDateTime closeAt;
-    private List<DietType> dietType;
+    private List<DietType> dietTypes;
     private LocalDateTime lastModifiedAt;
     private LocalDate createdAt;
-    private List<String> cuisineType;
+    private List<String> cuisineTypes;
 }

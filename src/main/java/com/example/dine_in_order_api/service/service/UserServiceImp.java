@@ -1,6 +1,6 @@
 package com.example.dine_in_order_api.service.service;
 
-import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.enums.UserRole;
@@ -24,7 +24,7 @@ public class UserServiceImp implements UserService{
     UserMapper userMapper;
 
     @Override
-    public UserResponce registration(RegistrationRequest registrationRequest) {
+    public UserResponce registration(UserRegistrationRequest registrationRequest) {
         User user = this.getUser(registrationRequest.getUserrole());
         userMapper.mapToUserEntity(registrationRequest, user);
         return userMapper.mapToUserResponce(userRepository.save(user));

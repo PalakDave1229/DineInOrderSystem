@@ -12,7 +12,8 @@ import java.util.List;
 @Table(name="admins")
 @Getter
 @Setter
+@Entity
 public class Admin extends User{
     @OneToMany(mappedBy = "admin")
-    private List<Restaurent> restaurent;
+    private List<Restaurent> restaurents;
 }

@@ -37,6 +37,6 @@ public class RestaurantRequest {
     @Pattern(regexp = "\\b(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)\\b\n", message ="time should in proper format EX: 12:45 PM ")
     private LocalDateTime closeAt;
 
-    private List<DietType> dietType;
-    private List<String> cuisineType;
+    private List<DietType> dietTypes;
+    private List<String> cuisineTypes;
 }

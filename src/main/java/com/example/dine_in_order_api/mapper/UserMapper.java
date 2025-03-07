@@ -1,6 +1,7 @@
 package com.example.dine_in_order_api.mapper;
 
-import com.example.dine_in_order_api.dto.request.RegistrationRequest;
+
+import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.model.User;
@@ -28,7 +29,7 @@ public interface UserMapper {
        * @param updatedUser DTO class object with user detail
        * @param user object of user entity
        */
-      void mapToUserEntity(RegistrationRequest updatedUser,@MappingTarget User user);
+      void mapToUserEntity(UserRegistrationRequest updatedUser, @MappingTarget User user);
 
       /**
        *
