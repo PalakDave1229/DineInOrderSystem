@@ -1,4 +1,4 @@
-package com.example.dine_in_order_api.service.service;
+package com.example.dine_in_order_api.service.serviceImpl;
 
 import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;

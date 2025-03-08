@@ -5,8 +5,6 @@ import com.example.dine_in_order_api.dto.responce.RestaurestResponse;
 import com.example.dine_in_order_api.service.RestaurentService;
 import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
