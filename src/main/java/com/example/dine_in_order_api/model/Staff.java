@@ -2,6 +2,7 @@ package com.example.dine_in_order_api.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +21,8 @@ public class Staff extends User {
 
     @ManyToMany
     private List<RestaurantTable> restaurantTables;
+
+    @ManyToOne
+    private Restaurent restaurent;
 
 }

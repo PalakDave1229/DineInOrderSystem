@@ -3,7 +3,6 @@ package com.example.dine_in_order_api.service.serviceImpl;
 import com.example.dine_in_order_api.dto.request.TableRequest;
 import com.example.dine_in_order_api.dto.responce.TableResponce;
 import com.example.dine_in_order_api.exception.RestaurantNotFoundException;
-import com.example.dine_in_order_api.exception.UserNotFoundException;
 import com.example.dine_in_order_api.mapper.TableMapper;
 import com.example.dine_in_order_api.model.RestaurantTable;
 import com.example.dine_in_order_api.model.Restaurent;

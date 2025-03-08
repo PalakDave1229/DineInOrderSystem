@@ -54,7 +54,12 @@ public class Restaurent {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<CuisineType> cuisineTypes;
 
-    @OneToMany
+    @OneToMany(mappedBy = "restaurent")
     private List<RestaurantTable> restaurantTables;
 
+    @OneToMany(mappedBy = "restaurent")
+    private List<FoodItem> foodItems;
+
+    @OneToMany(mappedBy = "restaurent")
+    private List<Staff> staffs;
 }
