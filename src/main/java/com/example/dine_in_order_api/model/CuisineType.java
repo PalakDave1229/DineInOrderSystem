@@ -19,4 +19,7 @@ public class CuisineType {
     @ManyToMany(mappedBy = "cuisineTypes")
     private List<Restaurent> restaurents;
 
+    @OneToMany(mappedBy = "cuisineType")
+    private List<FoodItem> foodItems;
+
 }

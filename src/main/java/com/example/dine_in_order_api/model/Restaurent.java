@@ -50,6 +50,16 @@ public class Restaurent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Admin admin;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private List<CuisineType> cuisineTypes;
+
+    @OneToMany(mappedBy = "restaurent")
+    private List<RestaurantTable> restaurantTables;
+
+    @OneToMany(mappedBy = "restaurent")
+    private List<FoodItem> foodItems;
+
+    @OneToMany(mappedBy = "restaurent")
+    private List<Staff> staffs;
 }

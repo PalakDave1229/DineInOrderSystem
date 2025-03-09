@@ -1,4 +1,4 @@
-package com.example.dine_in_order_api.service.service;
+package com.example.dine_in_order_api.service.serviceImpl;
 
 import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;
@@ -7,25 +7,34 @@ import com.example.dine_in_order_api.enums.UserRole;
 import com.example.dine_in_order_api.exception.UserNotFoundException;
 import com.example.dine_in_order_api.mapper.UserMapper;
 import com.example.dine_in_order_api.model.Admin;
+import com.example.dine_in_order_api.model.RestaurantTable;
 import com.example.dine_in_order_api.model.Staff;
 import com.example.dine_in_order_api.model.User;
+import com.example.dine_in_order_api.repository.TableRepository;
 import com.example.dine_in_order_api.repository.UserRepository;
 import com.example.dine_in_order_api.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@AllArgsConstructor
 public class UserServiceImp implements UserService{
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final TableRepository tableRepository;
+
 
     @Override
     public UserResponce registration(UserRegistrationRequest registrationRequest) {
         User user = this.getUser(registrationRequest.getUserrole());
+        if(user instanceof Staff){
+            List<RestaurantTable> tableList = tableRepository.findAll();
+        }
         userMapper.mapToUserEntity(registrationRequest, user);
         return userMapper.mapToUserResponce(userRepository.save(user));
     }
