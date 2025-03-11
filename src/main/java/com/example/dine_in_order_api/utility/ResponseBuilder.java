@@ -29,6 +29,15 @@ public class ResponseBuilder {
         return ResponseEntity.status(httpStatus).body(res);
     }
 
+    public static <T> ResponseEntity<ListResponseStructure<T>> success(List<T> data, HttpStatus httpStatus, String message) {
+        ListResponseStructure<T> res = ListResponseStructure.<T>builder()
+                .message(message)
+                .httpStatus(httpStatus.value())
+                .data(data)
+                .build();
+        return ResponseEntity.status(httpStatus).body(res);
+    }
+
     /**
      *
      *  helps to generate ResponseEntity to sends response with header details
@@ -63,6 +72,9 @@ public class ResponseBuilder {
      */
 
     public static <T> ResponseEntity<ResponseStructure<T>> ok(T data,String message){
+        return success(data,HttpStatus.OK,message);
+    }
+    public static <T> ResponseEntity<ListResponseStructure<T>> ok(List<T> data,String message){
         return success(data,HttpStatus.OK,message);
     }
 
