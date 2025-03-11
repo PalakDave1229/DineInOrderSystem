@@ -4,9 +4,11 @@ import com.example.dine_in_order_api.dto.request.FoodItemRequest;
 import com.example.dine_in_order_api.dto.responce.FoodItemResponse;
 import com.example.dine_in_order_api.exception.RestaurantNotFoundException;
 import com.example.dine_in_order_api.mapper.FoodItemMapper;
+import com.example.dine_in_order_api.model.Category;
 import com.example.dine_in_order_api.model.CuisineType;
 import com.example.dine_in_order_api.model.FoodItem;
 import com.example.dine_in_order_api.model.Restaurent;
+import com.example.dine_in_order_api.repository.CategoryRepository;
 import com.example.dine_in_order_api.repository.CuisineRepository;
 import com.example.dine_in_order_api.repository.FoodItemRepository;
 import com.example.dine_in_order_api.repository.RestaurentRepository;
@@ -14,6 +16,10 @@ import com.example.dine_in_order_api.service.FoodItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 
 @AllArgsConstructor
@@ -24,6 +30,7 @@ public class FoodItemserviceImpl implements FoodItemService {
     private final FoodItemRepository foodItemRepository;
     private final FoodItemMapper foodItemMapper;
     private final CuisineRepository cuisineRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     @Transactional
@@ -42,6 +49,7 @@ public class FoodItemserviceImpl implements FoodItemService {
                     return cuisineType;
                 });
 
+        foodItem.setCategories(this.createNonExistingCategory(foodItem.getCategories()));
         foodItem.setRestaurent(restaurent);
         foodItem.setCuisineType(foodItem.getCuisineType());
 
@@ -49,4 +57,22 @@ public class FoodItemserviceImpl implements FoodItemService {
 
         return foodItemMapper.mappToFoodItemResponse(foodItem);
     }
+
+    @Override
+    public List<FoodItemResponse> findByTwoCategories(List<String> categories) {
+        if(categories.isEmpty()){
+            return foodItemMapper.mapToListOfFoodItemResponse(foodItemRepository.findAll());
+        }
+        else{
+            return foodItemMapper.mapToListOfFoodItemResponse(foodItemRepository.findByTwoCategories(categories.stream().distinct().toList(),categories.size()));
+        }
+    }
+
+    private List<Category> createNonExistingCategory(List<Category> categories) {
+        return categories.stream()
+                .map(type -> categoryRepository.findById(type.getCategory())
+                        .orElseGet(() ->categoryRepository.save(type)))
+                .toList();
+    }
+
 }
