@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name ="User controller", description = "Collection of API Endpoints for User Management")
 public class UserController {
 
-
     private UserService userService;
 
 

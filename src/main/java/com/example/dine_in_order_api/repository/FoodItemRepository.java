@@ -15,5 +15,7 @@ public interface FoodItemRepository extends JpaRepository<FoodItem,Long> {
             "WHERE c.category IN :categories " +
             "GROUP BY fi.id " +
             "HAVING COUNT(DISTINCT c.category) = :categoryCount")
-    List<FoodItem> findByTwoCategories(@Param("categories") List<String> categories, @Param("categoryCount") int categoryCount);
+    List<FoodItem> findByTwoCategories(
+            @Param("categories") List<String> categories,
+            @Param("categoryCount") int categoryCount);
 }

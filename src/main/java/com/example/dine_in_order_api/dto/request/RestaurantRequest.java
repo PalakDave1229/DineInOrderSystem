@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -29,13 +30,13 @@ public class RestaurantRequest {
 
 //    @NotNull(message = "Restaurant can not be null !!")
 //    @NotBlank(message = "Restaurant can not be blank !!")
-//    @Pattern(regexp = "\\b(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)\\b\n", message ="time should in proper format EX: 12:45 PM ")
-    private LocalDateTime opensAt;
+    @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$", message ="time should in proper format EX: 12:45:00 ")
+    private LocalTime opensAt;
 
-//    @NotNull(message = "Restaurant can not be null !!")
-//    @NotBlank(message = "Restaurant can not be blank !!")
-//    @Pattern(regexp = "\\b(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)\\b\n", message ="time should in proper format EX: 12:45 PM ")
-    private LocalDateTime closeAt;
+//  @NotNull(message = "Restaurant can not be null !!")
+//  @NotBlank(message = "Restaurant can not be blank !!")
+    @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$", message ="time should in proper format EX: 12:45:00 ")
+    private LocalTime closeAt;
 
     private List<DietType> dietTypes;
     private List<String> cuisineTypes;

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -38,10 +39,10 @@ public class Restaurent {
     private String contactEmail;
 
     @Column(name = "open_at")
-    private LocalDateTime opensAt;
+    private LocalTime opensAt;
 
     @Column(name = "close_at")
-    private LocalDateTime closeAt;
+    private LocalTime closeAt;
 
     @Enumerated
     @Column(name = "diet_type")
