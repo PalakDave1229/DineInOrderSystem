@@ -2,6 +2,7 @@ package com.example.dine_in_order_api.service.serviceImpl;
 
 import com.example.dine_in_order_api.dto.request.FoodItemRequest;
 import com.example.dine_in_order_api.dto.responce.FoodItemResponse;
+import com.example.dine_in_order_api.exception.FoodNotFoundException;
 import com.example.dine_in_order_api.exception.RestaurantNotFoundException;
 import com.example.dine_in_order_api.mapper.FoodItemMapper;
 import com.example.dine_in_order_api.model.Category;
@@ -61,10 +62,18 @@ public class FoodItemserviceImpl implements FoodItemService {
     @Override
     public List<FoodItemResponse> findByTwoCategories(List<String> categories) {
         if(categories.isEmpty()){
-            return foodItemMapper.mapToListOfFoodItemResponse(foodItemRepository.findAll());
+            throw new FoodNotFoundException("No food with this categories");
         }
         else{
-            return foodItemMapper.mapToListOfFoodItemResponse(foodItemRepository.findByTwoCategories(categories.stream().distinct().toList(),categories.size()));
+            List<FoodItemResponse> foodItemList = foodItemMapper.mapToListOfFoodItemResponse(
+                    foodItemRepository.findByTwoCategories(
+                            categories.stream().distinct().toList(),categories.size()));
+            if(foodItemList.isEmpty()){
+                throw new FoodNotFoundException("No food with this categories");
+            }
+            else {
+                return foodItemList;
+            }
         }
     }
 

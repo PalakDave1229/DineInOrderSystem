@@ -4,6 +4,10 @@ import com.example.dine_in_order_api.enums.DietType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "Restaurent")
+@EntityListeners(AuditingEntityListener.class)
 public class Restaurent {
 
     @Id
@@ -42,9 +47,11 @@ public class Restaurent {
     @Column(name = "diet_type")
     private List<DietType> dietTypes;
 
+    @CreatedDate
     @Column(name = "created_at")
     private LocalDate createdAt;
 
+    @LastModifiedDate
     @Column(name = "last_modified_at")
     private LocalDateTime lastModifiedAt;
 

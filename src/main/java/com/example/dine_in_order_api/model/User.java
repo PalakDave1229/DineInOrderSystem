@@ -4,6 +4,9 @@ import com.example.dine_in_order_api.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
@@ -37,8 +41,10 @@ public class User {
     private UserRole userrole;
 
     @Column(name = "created_at")
+    @CreatedDate
     private LocalDate createdat;
 
     @Column(name = "last_modified_at")
+    @LastModifiedDate
     private LocalDateTime lastmodifiedat;
 }
