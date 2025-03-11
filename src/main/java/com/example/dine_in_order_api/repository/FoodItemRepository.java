@@ -11,8 +11,7 @@ import java.util.List;
 public interface FoodItemRepository extends JpaRepository<FoodItem,Long> {
 
 
-    @Query("SELECT fi FROM FoodItem fi " +
-            "INNER JOIN fi.categories c " +
+    @Query("SELECT fi FROM FoodItem fi INNER JOIN fi.categories c " +
             "WHERE c.category IN :categories " +
             "GROUP BY fi.id " +
             "HAVING COUNT(DISTINCT c.category) = :categoryCount")
