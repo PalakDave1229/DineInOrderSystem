@@ -6,9 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class cartItemResponse {
+public class CartItemResponse {
     private long itemId;
-    private FoodItem foodItem;
+    private FoodItemResponse foodItem;
     private int quantity;
     private double totalPrice;
 }

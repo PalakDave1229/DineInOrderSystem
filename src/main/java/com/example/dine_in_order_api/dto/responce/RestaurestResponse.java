@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -16,8 +17,8 @@ public class RestaurestResponse {
     private String address;
     private String contactNumber;
     private String contactEmail;
-    private LocalDateTime opensAt;
-    private LocalDateTime closeAt;
+    private LocalTime opensAt;
+    private LocalTime closeAt;
     private List<DietType> dietTypes;
     private LocalDateTime lastModifiedAt;
     private LocalDate createdAt;
