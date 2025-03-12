@@ -1,7 +1,7 @@
 package com.example.dine_in_order_api.repository;
 
-import com.example.dine_in_order_api.model.Category;
 import com.example.dine_in_order_api.model.FoodItem;
+import com.example.dine_in_order_api.model.Restaurent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +18,6 @@ public interface FoodItemRepository extends JpaRepository<FoodItem,Long> {
     List<FoodItem> findByTwoCategories(
             @Param("categories") List<String> categories,
             @Param("categoryCount") int categoryCount);
+
+    List<FoodItem> findByRestaurent(Restaurent restaurent);
 }
