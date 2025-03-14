@@ -1,6 +1,7 @@
 package com.example.dine_in_order_api.mapper;
 
 import com.example.dine_in_order_api.dto.request.FoodItemRequest;
+import com.example.dine_in_order_api.dto.responce.CuisineTypeResponse;
 import com.example.dine_in_order_api.dto.responce.FoodItemResponse;
 import com.example.dine_in_order_api.model.Category;
 import com.example.dine_in_order_api.model.CuisineType;
@@ -16,7 +17,16 @@ public interface FoodItemMapper {
     public FoodItem mapToFoodItem(FoodItemRequest foodItemRequest);
     public FoodItemResponse mappToFoodItemResponse (FoodItem foodItem);
     public List<FoodItemResponse> mapToListOfFoodItemResponse(List<FoodItem> foodItems);
-
+    default CuisineTypeResponse mapToCuisineTypeResponse(CuisineType value){
+        if(value == null) {
+            return null;
+        }
+        else {
+            CuisineTypeResponse type = new CuisineTypeResponse();
+            type.setCuisine(value.getCuisine().toLowerCase());
+            return type;
+        }
+    };
     default String mapToString(CuisineType value) {
         if(value == null) {
             return null;

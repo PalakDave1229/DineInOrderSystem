@@ -8,10 +8,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 @RestControllerAdvice
 public class FoodExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<SimpleErrorStructure> RestaurantNotFoundException(FoodNotFoundException e){
+    public ResponseEntity<SimpleErrorStructure> handleRestaurantNotFoundException(FoodNotFoundException e){
+        return ResponseBuilder.notFound(e.getMessage());
+    }
+    @ExceptionHandler
+    public ResponseEntity<SimpleErrorStructure> handleNoSuchElementException(NoSuchElementException e){
         return ResponseBuilder.notFound(e.getMessage());
     }
 }

@@ -23,6 +23,21 @@
 	</properties>
 
 	<dependencies>
+
+		<!-- ZXing Core -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.5.1</version>
+		</dependency>
+
+		<!-- ZXing Java SE -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.5.1</version>
+		</dependency>
+
 		<!-- swagger -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
