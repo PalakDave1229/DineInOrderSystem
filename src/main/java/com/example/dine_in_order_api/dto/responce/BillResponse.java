@@ -14,6 +14,6 @@ public class BillResponse {
     private long billId;
     private LocalDateTime generatedAt;
     private double totalPayableAmount;
-    private List<Order> orders;
+    private List<OrderResponse> orders;
 
 }

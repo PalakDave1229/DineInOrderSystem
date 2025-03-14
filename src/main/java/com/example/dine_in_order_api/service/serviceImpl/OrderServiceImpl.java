@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
         if(!cartItemList.isEmpty()){
             order = new Order();
             order.setOrderStatus(OrderStatus.CONFIRMED);
-            order.setCartItem(cartItemList);
+            order.setCartItems(cartItemList);
             order.setRestaurantTable(restaurantTable);
             order.setTotalAmount(cartItemList.stream()
                     .mapToDouble(CartItem::getTotalPrice)

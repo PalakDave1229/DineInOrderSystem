@@ -36,6 +36,6 @@ public class Order{
     private RestaurantTable restaurantTable;
 
     @OneToMany
-    private List<CartItem> cartItem;
+    private List<CartItem> cartItems;
 
 }

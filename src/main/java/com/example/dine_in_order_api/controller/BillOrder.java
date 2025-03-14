@@ -1,6 +1,8 @@
 package com.example.dine_in_order_api.controller;
 
 import com.example.dine_in_order_api.dto.responce.BillResponse;
+import com.example.dine_in_order_api.service.BillService;
+import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class BillOrder {
 
+    private final BillService billService;
+
     @PostMapping("/bills/tables/{tableId}")
     public ResponseEntity<ResponseStructure<BillResponse>> createBill(@PathVariable long tableId){
-
-        return
+        BillResponse billResponse = billService.createBill(tableId);
+        return ResponseBuilder.created(billResponse,"Bill Generated !!");
     }
 }
