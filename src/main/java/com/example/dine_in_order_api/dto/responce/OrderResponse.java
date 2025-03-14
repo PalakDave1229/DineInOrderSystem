@@ -17,6 +17,6 @@ public class OrderResponse {
     private OrderStatus orderStatus;
     private LocalDateTime orderedAt;
     private double totalAmount;
-    private List<CartItemRepository> cartItems;
+    private List<CartItemResponse> cartItems;
 
 }
