@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,7 +23,7 @@ public class CartItem {
 
     private double totalPrice;
 
-    private OrderStatus isOrdered;
+    private boolean ordered;
 
     @ManyToOne
     private FoodItem foodItem;

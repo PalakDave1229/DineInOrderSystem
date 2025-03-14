@@ -18,7 +18,7 @@ public class FoodItemResponse {
     private String Description;
     private StockStatus availability;
     private DietType dietType;
-    private String cuisineType;
+    private String cuisineTypeResponse;
     private LocalDate createdat;
     private LocalDateTime lastmodifiedat;
     private List<String> categories;

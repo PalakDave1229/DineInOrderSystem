@@ -20,7 +20,6 @@ public class FoodItemController {
 
     private final FoodItemService foodItemService;
 
-
     @PostMapping("/fooditems/restaurants/{id}")
     public ResponseEntity<ResponseStructure<FoodItemResponse>> createFoodItem(@PathVariable long id, @RequestBody FoodItemRequest foodItemRequest){
         FoodItemResponse foodItemResponse = foodItemService.createFoodItem(id,foodItemRequest);
@@ -36,4 +35,5 @@ public class FoodItemController {
     public ResponseEntity<ListResponseStructure<FoodItemResponse>> findByRestaurantId(@PathVariable long restaurantId){
         return  ResponseBuilder.ok(foodItemService.findByRestaurantId(restaurantId),"Food item List found according restaurant");
     }
+
 }

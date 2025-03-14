@@ -1,5 +1,5 @@
 package com.example.dine_in_order_api.enums;
 
 public enum OrderStatus {
-    ORDERED,NOT_ORDERED
+    PENDING,CONFIRMED,PREPARING,READY,SERVED,PAID,CANCELLED
 }

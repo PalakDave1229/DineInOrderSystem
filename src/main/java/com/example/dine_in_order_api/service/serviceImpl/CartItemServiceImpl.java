@@ -60,6 +60,7 @@ public class CartItemServiceImpl implements CartItemService {
         cartItem.setQuantity(quantity);
         cartItem.setTotalPrice(foodItem.getPrice() * quantity);
         cartItem.setRestaurantTable(restaurantTable);
+        cartItem.setOrdered(false);
         return cartItem;
     }
 

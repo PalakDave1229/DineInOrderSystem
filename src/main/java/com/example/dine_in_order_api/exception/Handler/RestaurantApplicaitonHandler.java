@@ -16,4 +16,5 @@ public class RestaurantApplicaitonHandler {
     public ResponseEntity<SimpleErrorStructure> RestaurantNotFoundException(RestaurantNotFoundException e){
         return ResponseBuilder.notFound(e.getMessage());
     }
+
 }
