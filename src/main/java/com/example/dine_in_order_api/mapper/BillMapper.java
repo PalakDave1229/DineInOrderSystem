@@ -13,5 +13,11 @@ import java.util.List;
 public interface BillMapper {
     public BillResponse mapToBillResponse(Bill bill);
     List<String> map(List<Category> value);
-    String map(Category value);
+    default String mapToString(Category value) {
+        if(value == null) {
+            return null;
+        }
+        else return value.getCategory().toLowerCase();
+    }
+
 }

@@ -6,15 +6,12 @@ import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${app.base-url}")
 @AllArgsConstructor
-public class BillOrder {
+public class BillController {
 
     private final BillService billService;
 
@@ -23,4 +20,18 @@ public class BillOrder {
         BillResponse billResponse = billService.createBill(tableId);
         return ResponseBuilder.created(billResponse,"Bill Generated !!");
     }
+
+    @GetMapping("/bills/{billId}")
+    public ResponseEntity<ResponseStructure<BillResponse>> findByBillId(@PathVariable long billId){
+        BillResponse billResponse = billService.findById(billId);
+        return ResponseBuilder.ok(billResponse,"Bill Found !!");
+    }
+
+    @GetMapping("/bills/pdf/{billId}")
+    public ResponseEntity<ResponseStructure<Byte[]>> findBillById(@PathVariable long billId){
+        BillResponse billResponse = billService.findById(billId);
+        ResponseBuilder.ok(billResponse,"Bill Found !!");
+        return null;
+    }
+
 }

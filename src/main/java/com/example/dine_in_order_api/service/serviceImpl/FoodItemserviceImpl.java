@@ -39,6 +39,8 @@ public class FoodItemserviceImpl implements FoodItemService {
 
         FoodItem foodItem = foodItemMapper.mapToFoodItem(foodItemRequest);
 
+        System.out.println("Desc of food : " + foodItem.getDescription());
+
         Restaurent restaurent = restaurentRepository.findById(id)
                 .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found !!"));
 

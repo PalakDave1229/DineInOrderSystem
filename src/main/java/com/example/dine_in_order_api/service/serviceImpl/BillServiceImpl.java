@@ -3,6 +3,7 @@ package com.example.dine_in_order_api.service.serviceImpl;
 import com.example.dine_in_order_api.dto.responce.BillResponse;
 import com.example.dine_in_order_api.enums.OrderStatus;
 import com.example.dine_in_order_api.enums.TableStatus;
+import com.example.dine_in_order_api.exception.NoBillFoundException;
 import com.example.dine_in_order_api.mapper.BillMapper;
 import com.example.dine_in_order_api.model.Bill;
 import com.example.dine_in_order_api.model.Order;
@@ -53,4 +54,21 @@ public class BillServiceImpl implements BillService {
 
         return billMapper.mapToBillResponse(bill);
     }
+
+    @Override
+    public BillResponse findById(long billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new NoBillFoundException("No bill found with "+ billId +" id"));
+        return billMapper.mapToBillResponse(bill);
+    }
+
+    @Override
+    public Byte[] findBillById(long billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new NoBillFoundException("No bill found with "+ billId +" id"));
+
+                billMapper.mapToBillResponse(bill);
+        return null;
+    }
 }
+
