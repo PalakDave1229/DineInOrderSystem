@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class BillServiceImpl implements BillService {
     @Override
     public BillResponse createBill(long tableId) {
-        return null;
+
+        return ;
     }
 }
