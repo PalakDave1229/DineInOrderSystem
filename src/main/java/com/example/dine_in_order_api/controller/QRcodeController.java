@@ -3,7 +3,6 @@ package com.example.dine_in_order_api.controller;
 import com.example.dine_in_order_api.service.QRcodeGaneratorService;
 import com.google.zxing.WriterException;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

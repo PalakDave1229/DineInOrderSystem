@@ -33,5 +33,4 @@ public class BillController {
         ResponseBuilder.ok(billResponse,"Bill Found !!");
         return null;
     }
-
 }

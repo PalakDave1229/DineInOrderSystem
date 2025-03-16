@@ -18,7 +18,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/orders/tables/{tableId}")
-    public ResponseEntity<ResponseStructure<OrderResponse>> createOrder(@PathVariable   long tableId){
+    public ResponseEntity<ResponseStructure<OrderResponse>> createOrder(@PathVariable long tableId){
         OrderResponse orderResponse = orderService.createOrder(tableId);
         return ResponseBuilder.created(orderResponse,"Order Created!! ");
     }

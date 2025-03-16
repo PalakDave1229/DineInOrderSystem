@@ -5,7 +5,6 @@ import com.example.dine_in_order_api.service.CartItemService;
 import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
 import lombok.AllArgsConstructor;
-import org.hibernate.annotations.processing.Pattern;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

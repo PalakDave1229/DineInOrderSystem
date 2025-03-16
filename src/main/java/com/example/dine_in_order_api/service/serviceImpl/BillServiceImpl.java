@@ -15,12 +15,15 @@ import com.example.dine_in_order_api.service.BillService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
 public class BillServiceImpl implements BillService {
+
     private final BillRepository billRepository;
     private final TableRepository tableRepository;
     private final OrderRepository orderRepository;
@@ -46,7 +49,6 @@ public class BillServiceImpl implements BillService {
         else{
             throw new NoSuchElementException(" No CartItem Selected !! ");
         }
-
         orderList.forEach(order -> order.setOrderStatus(OrderStatus.PAID));
         restaurantTable.setStatus(TableStatus.AVAILABLE);
         tableRepository.save(restaurantTable);

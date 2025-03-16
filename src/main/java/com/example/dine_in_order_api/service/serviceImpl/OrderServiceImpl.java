@@ -43,7 +43,8 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderStatus(OrderStatus.CONFIRMED);
             order.setCartItems(cartItemList);
             order.setRestaurantTable(restaurantTable);
-            order.setTotalAmount(cartItemList.stream()
+            order.setTotalAmount(
+                    cartItemList.stream()
                     .mapToDouble(CartItem::getTotalPrice)
                     .sum());
             orderRepository.save(order);
