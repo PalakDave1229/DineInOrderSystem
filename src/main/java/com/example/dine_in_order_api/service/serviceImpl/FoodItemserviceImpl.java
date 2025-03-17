@@ -2,6 +2,7 @@ package com.example.dine_in_order_api.service.serviceImpl;
 
 import com.example.dine_in_order_api.dto.request.FoodItemRequest;
 import com.example.dine_in_order_api.dto.responce.FoodItemResponse;
+import com.example.dine_in_order_api.enums.StockStatus;
 import com.example.dine_in_order_api.exception.FoodNotFoundException;
 import com.example.dine_in_order_api.exception.RestaurantNotFoundException;
 import com.example.dine_in_order_api.mapper.FoodItemMapper;
@@ -55,6 +56,10 @@ public class FoodItemserviceImpl implements FoodItemService {
         foodItem.setCategories(this.createNonExistingCategory(foodItem.getCategories()));
         foodItem.setRestaurent(restaurent);
         foodItem.setCuisineType(foodItem.getCuisineType());
+
+        if(foodItem.getStock()>0)
+            foodItem.setAvailability(StockStatus.STOCK_IN);
+        else foodItem.setAvailability(StockStatus.STOCK_OUT);
 
         foodItemRepository.save(foodItem);
 

@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -37,7 +38,6 @@ public class RestaurantServiceImpl implements RestaurentService {
              List<CuisineType> cuisineTypes = this.createNonExistingCuisineTypes(restaurent.getCuisineTypes());
              restaurent.setCuisineTypes(cuisineTypes);
              restaurent.setAdmin(admin);
-
              restaurentReposetory.save(restaurent);
 
              return restaurantMapper.mapToRestaurantResponce(restaurent);

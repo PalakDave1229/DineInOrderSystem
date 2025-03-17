@@ -2,6 +2,7 @@ package com.example.dine_in_order_api.mapper;
 
 import com.example.dine_in_order_api.dto.responce.OrderResponse;
 import com.example.dine_in_order_api.model.Category;
+import com.example.dine_in_order_api.model.CuisineType;
 import com.example.dine_in_order_api.model.Order;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
@@ -18,5 +19,11 @@ public interface OrderMapper {
             return null;
         }
         else return value.getCategory().toLowerCase();
+    }
+    default String mapToString(CuisineType value) {
+        if(value == null) {
+            return null;
+        }
+        else return value.getCuisine().toLowerCase();
     }
 }

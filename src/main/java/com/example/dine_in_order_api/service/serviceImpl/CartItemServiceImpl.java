@@ -13,6 +13,8 @@ import com.example.dine_in_order_api.service.CartItemService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.nio.file.AccessDeniedException;
 import java.security.InvalidParameterException;
 
 @Service
@@ -28,16 +30,28 @@ public class CartItemServiceImpl implements CartItemService {
     public CartItemResponse createCartItem(long tableId, long foodId, int quantity) {
 
         RestaurantTable restaurantTable = tableRepository.findById(tableId)
-                .orElseThrow(() ->new InvalidParameterException("Table Not Found !!"));
+                .orElseThrow(() -> new InvalidParameterException("Table Not Found !!"));
 
         FoodItem foodItem = foodItemRepository.findById(foodId)
                 .orElseThrow(() -> new FoodNotFoundException("Food Not Found To Add In Cart"));
 
-        CartItem cartItem = cartItemRepository.save(
-                getCartItem(quantity, foodItem, restaurantTable));
+        CartItem cartItem;
 
+        if (foodItem.getRestaurent().getRestaurantId() != restaurantTable.getRestaurent().getRestaurantId() ) {
+            throw new FoodNotFoundException("food item not found in restaurant !!");
+        }
+        else if (foodItem.getStock() < quantity) {
+            try {
+                throw new AccessDeniedException("not enough stock is available : current stock = "+foodItem.getStock());
+            } catch (AccessDeniedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            cartItem = cartItemRepository.save(
+                    getCartItem(quantity, foodItem, restaurantTable));
+        }
         return cartItemMapper.mapToCartItemResponse(cartItem);
-
     }
 
     @Override
@@ -45,10 +59,17 @@ public class CartItemServiceImpl implements CartItemService {
 
         CartItem cartItem = cartItemRepository.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundException("Cart item with ID " + cartId + " not found"));
-
-        cartItem.setQuantity(quantity);
-        cartItem.setTotalPrice(cartItem.getFoodItem().getPrice() * quantity);
-
+        if(!cartItem.isOrdered()) {
+            cartItem.setQuantity(quantity);
+            cartItem.setTotalPrice(cartItem.getFoodItem().getPrice() * quantity);
+        }
+        else{
+            try {
+                throw new AccessDeniedException("Can't update quantity after ordered!! , you can do new order for more items :) " );
+            } catch (AccessDeniedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return cartItemMapper.mapToCartItemResponse(
                 cartItemRepository.save(cartItem)
         );

@@ -36,28 +36,28 @@
 </head>
 <body>
 <div class="bill">
-    <h1 th:text="${bill.restaurantName}"></h1>
-    <hr>
-    <h2>Bill ID: <span th:text="${bill.id}"></span></h2>
-    <h3>Table No: <span th:text="${bill.tableNo}"></span></h3>
+    <h1 th:text="${restaurantName}"></h1>
+    <hr/>
+    <h2>Bill ID: <span th:text="${id}"></span></h2>
+    <h3>Table No: <span th:text="${tableNo}"></span></h3>
     <div th:each="order : ${bill.orders}" class="order">
-        <h3>Order ID: <span th:text="${order.id}"></span></h3>
+        <h3>Order ID: <span th:text="${order.orderId}"></span></h3>
         <table>
             <tr>
                 <th>Food Item</th>
                 <th>Price</th>
                 <th>Quantity</th>
             </tr>
-            <tr th:each="foodItem : ${order.foodItems}">
-                <td th:text="${foodItem.name}"></td>
-                <td th:text="${foodItem.price}"></td>
-                <td th:text="${foodItem.quantity}"></td>
+            <tr th:each="cartItem : ${order.cartItems}">
+                <td th:text="${cartItem.foodItem.name}"></td>
+                <td th:text="${cartItem.foodItem.price}"></td>
+                <td th:text="${cartItem.quantity}"></td>
             </tr>
         </table>
         <p class="total">Order Total: <span th:text="${order.totalAmount}"></span></p>
     </div>
-    <hr>
-    <h2 class="total">Total Payable Amount: <span th:text="${bill.totalAmount}"></span></h2>
+    <hr/>
+    <h2 class="total">Total Payable Amount: <span th:text="${totalAmount}"></span></h2>
 </div>
 </body>
 </html>

@@ -2,12 +2,15 @@ package com.example.dine_in_order_api.service.serviceImpl;
 
 import com.example.dine_in_order_api.dto.responce.OrderResponse;
 import com.example.dine_in_order_api.enums.OrderStatus;
+import com.example.dine_in_order_api.enums.StockStatus;
 import com.example.dine_in_order_api.enums.TableStatus;
 import com.example.dine_in_order_api.mapper.OrderMapper;
 import com.example.dine_in_order_api.model.CartItem;
+import com.example.dine_in_order_api.model.FoodItem;
 import com.example.dine_in_order_api.model.Order;
 import com.example.dine_in_order_api.model.RestaurantTable;
 import com.example.dine_in_order_api.repository.CartItemRepository;
+import com.example.dine_in_order_api.repository.FoodItemRepository;
 import com.example.dine_in_order_api.repository.OrderRepository;
 import com.example.dine_in_order_api.repository.TableRepository;
 import com.example.dine_in_order_api.service.OrderService;
@@ -26,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final TableRepository tableRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderMapper orderMapper;
+    private final FoodItemRepository foodItemRepository;
 
 
     @Override
@@ -57,6 +61,16 @@ public class OrderServiceImpl implements OrderService {
         tableRepository.save(restaurantTable);
 
         cartItemList.forEach(item -> item.setOrdered(true));
+        cartItemList.forEach(cartItem -> {
+
+            FoodItem foodItem = cartItem.getFoodItem();
+            if ((foodItem.getStock() - cartItem.getQuantity() > 0)) {
+                foodItem.setAvailability(StockStatus.STOCK_IN);
+            } else foodItem.setAvailability(StockStatus.STOCK_OUT);
+
+            foodItem.setStock(foodItem.getStock()-cartItem.getQuantity());
+            foodItemRepository.save(foodItem);
+        });
         cartItemRepository.saveAll(cartItemList);
 
         return orderMapper.mapToOrderResponse(order);

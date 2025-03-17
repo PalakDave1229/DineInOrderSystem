@@ -22,7 +22,7 @@ public class Order{
     private long orderId;
 
     @Column(name = "order_status")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
     @Column(name = "ordered_at")
@@ -35,7 +35,7 @@ public class Order{
     @ManyToOne
     private RestaurantTable restaurantTable;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<CartItem> cartItems;
 
 }
