@@ -19,7 +19,7 @@ public class BillGenerator {
 
     private final TemplateEngine templateEngine;
 
-    public byte[] generatePdf(String s, Map<String, Object> bill) throws IOException {
+    public byte[] generatePdf(String s, Map<String,Object> bill) throws IOException {
 
         Context context = new Context();
         context.setVariables(bill);

@@ -8,9 +8,8 @@ import com.example.dine_in_order_api.mapper.BillMapper;
 import com.example.dine_in_order_api.model.Bill;
 import com.example.dine_in_order_api.model.Order;
 import com.example.dine_in_order_api.model.RestaurantTable;
-import com.example.dine_in_order_api.repository.BillRepository;
-import com.example.dine_in_order_api.repository.OrderRepository;
-import com.example.dine_in_order_api.repository.TableRepository;
+import com.example.dine_in_order_api.model.Restaurent;
+import com.example.dine_in_order_api.repository.*;
 import com.example.dine_in_order_api.service.BillService;
 import com.example.dine_in_order_api.utility.BillGenerator;
 import lombok.AllArgsConstructor;
@@ -29,9 +28,10 @@ public class BillServiceImpl implements BillService {
     private final BillRepository billRepository;
     private final TableRepository tableRepository;
     private final OrderRepository orderRepository;
-    private  final BillMapper billMapper;
+    private final BillMapper billMapper;
     private final BillGenerator billGenerator;
-
+    private final RestaurentRepository restaurentRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Override
     public BillResponse createBill(long tableId) {
@@ -39,18 +39,17 @@ public class BillServiceImpl implements BillService {
         RestaurantTable restaurantTable = tableRepository.findById(tableId)
                 .orElseThrow(() -> new NoSuchElementException("Table not found !!"));
 
-        List<Order> orderList = orderRepository.findByRestaurantTable(restaurantTable,OrderStatus.PAID);
+        List<Order> orderList = orderRepository.findByRestaurantTable(restaurantTable, OrderStatus.PAID);
         double totalAmount = orderList.stream()
                 .mapToDouble(Order::getTotalAmount)
                 .sum();
         Bill bill = null;
-        if(!orderList.isEmpty()) {
+        if (!orderList.isEmpty()) {
             bill = new Bill();
             bill.setOrders(orderList);
             bill.setTotalPayableAmount(totalAmount);
             billRepository.save(bill);
-        }
-        else{
+        } else {
             throw new NoSuchElementException(" No CartItem Selected !! ");
         }
         orderList.forEach(order -> order.setOrderStatus(OrderStatus.PAID));
@@ -64,26 +63,34 @@ public class BillServiceImpl implements BillService {
     @Override
     public BillResponse findById(long billId) {
         Bill bill = billRepository.findById(billId)
-                .orElseThrow(() -> new NoBillFoundException("No bill found with "+ billId +" id"));
+                .orElseThrow(() -> new NoBillFoundException("No bill found with " + billId + " id"));
         return billMapper.mapToBillResponse(bill);
     }
 
     @Override
     public byte[] findBillById(long billId) throws IOException {
-        Bill billDetails = billRepository.findById(billId)
-                .orElseThrow(() -> new NoBillFoundException("No bill found with "+ billId +" id"));
 
-        Map<String,Object> bill = mapOfBillDerails(billDetails);
+        BillResponse response = this.findById(billId);
 
-        System.out.println(bill);
+        long foodId = response.getOrders().getFirst().getCartItems().getFirst().getFoodItem().getId();
 
-        byte[] pdfBytes = billGenerator.generatePdf("billUI", bill);
+        Restaurent restaurantName = restaurentRepository.findNameByFoodItems_Id(foodId);
 
-        return pdfBytes;
+        long orderId = response.getOrders().getFirst().getOrderId();
+
+        Order order = orderRepository.findRestaurantTableByOrderId(orderId);
+
+        System.out.println(response);
+
+        Map<String, Object> bill = Map.of("restaurantName", restaurantName.getName(),
+                "tableNo",order.getRestaurantTable().getTableNumber(),
+                "bill", response);
+
+        return billGenerator.generatePdf("billUI", bill);
     }
 
-    private static Map<String,Object> mapOfBillDerails(Bill billDetails) {
-        Map<String,Object> bill = new HashMap<>();
+    private static Map<String, Object> mapOfBillDerails(Bill billDetails) {
+        Map<String, Object> bill = new HashMap<>();
 
         bill.put("id", billDetails.getBillId());
 
@@ -96,15 +103,15 @@ public class BillServiceImpl implements BillService {
 
         bill.put("orders", // orders in one bill
                 billDetails.getOrders().stream().map(order -> {
-                          return Map.of("id", order.getOrderId(),
-                                  "foodItems",order.getCartItems().stream().map(foodItem -> { // cartitems in one order
-                                              return Map.of("name",foodItem.getFoodItem().getName(),
-                                              "price",foodItem.getTotalPrice(),
-                                              "quantity", foodItem.getQuantity()
-                                              );
-                                          }).toList(),
-                                  "totalAmount",order.getTotalAmount()
-                          );
+                            return Map.of("id", order.getOrderId(),
+                                    "foodItems", order.getCartItems().stream().map(foodItem -> { // cartitems in one order
+                                        return Map.of("name", foodItem.getFoodItem().getName(),
+                                                "price", foodItem.getTotalPrice(),
+                                                "quantity", foodItem.getQuantity()
+                                        );
+                                    }).toList(),
+                                    "totalAmount", order.getTotalAmount()
+                            );
                         }
                 ).toList()
         );

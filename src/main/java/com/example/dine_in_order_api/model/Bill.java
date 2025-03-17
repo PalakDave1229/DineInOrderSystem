@@ -29,6 +29,6 @@ public class Bill {
     @Column(name = "total_payable_amount")
     private double totalPayableAmount;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Order> orders;
 }

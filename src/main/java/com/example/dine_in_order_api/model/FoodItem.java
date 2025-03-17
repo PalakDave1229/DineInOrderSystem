@@ -58,6 +58,7 @@ public class FoodItem {
     private CuisineType cuisineType;
 
     @ManyToOne
+    @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurent restaurent;
 
     @ManyToMany

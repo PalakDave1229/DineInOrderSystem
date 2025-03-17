@@ -35,7 +35,7 @@ public class Order{
     @ManyToOne
     private RestaurantTable restaurantTable;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<CartItem> cartItems;
 
 }
