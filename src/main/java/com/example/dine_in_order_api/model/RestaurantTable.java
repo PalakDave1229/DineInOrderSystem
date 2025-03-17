@@ -25,6 +25,7 @@ public class RestaurantTable {
     private int tableCapacity;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private TableStatus status;
 
     @ManyToOne

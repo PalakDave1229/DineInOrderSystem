@@ -28,14 +28,11 @@ public class RestaurantRequest {
     @Email(regexp = "^[a-zA-Z0-9._%+-]+@gmail.com", message = "Email must be a valid Gmail address")
     private String contactEmail;
 
-//    @NotNull(message = "Restaurant can not be null !!")
-//    @NotBlank(message = "Restaurant can not be blank !!")
-    @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$", message ="time should in proper format EX: 12:45:00 ")
+    @NotNull(message = "Restaurant can not be null !!")
     private LocalTime opensAt;
 
-//  @NotNull(message = "Restaurant can not be null !!")
-//  @NotBlank(message = "Restaurant can not be blank !!")
-    @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$", message ="time should in proper format EX: 12:45:00 ")
+    @NotNull(message = "Restaurant can not be null !!")
+
     private LocalTime closeAt;
 
     private List<DietType> dietTypes;

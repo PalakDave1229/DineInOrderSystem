@@ -15,7 +15,7 @@ public class FoodItemResponse {
     private long id;
     private String name;
     private double price;
-    private String Description;
+    private String description;
     private StockStatus availability;
     private DietType dietType;
     private String cuisineType;

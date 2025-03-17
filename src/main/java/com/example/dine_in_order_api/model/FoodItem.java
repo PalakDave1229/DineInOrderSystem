@@ -33,16 +33,17 @@ public class FoodItem {
     private double price;
 
     @Column(name = "description")
-    private String Description;
+    private String description;
 
     @Column(name ="stock")
     private int stock;
 
     @Column(name = "availability")
+    @Enumerated(EnumType.STRING)
     private StockStatus availability;
 
     @Column(name = "diet_type")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private DietType dietType;
 
     @Column(name = "created_at")
