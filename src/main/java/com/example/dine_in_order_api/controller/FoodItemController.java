@@ -31,7 +31,7 @@ public class FoodItemController {
             return  ResponseBuilder.ok(foodItemService.findByTwoCategories(categories),"Food item List found according categories");
     }
 
-    @GetMapping("/fooditems/restaurants/{restaurantId}")
+    @GetMapping("/restaurants/{restaurantId}/fooditems")
     public ResponseEntity<ListResponseStructure<FoodItemResponse>> findByRestaurantId(@PathVariable long restaurantId){
         return  ResponseBuilder.ok(foodItemService.findByRestaurantId(restaurantId),"Food item List found according restaurant");
     }

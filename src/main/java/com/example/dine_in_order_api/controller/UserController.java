@@ -26,7 +26,7 @@ public class UserController {
 
     private UserService userService;
 
-    @PostMapping("/User")
+    @PostMapping("/register")
     @Operation(description = """
             The API Endpoint is used to register user.
             The endpoints requires the user to select one of the specified role along with the other details

@@ -16,6 +16,7 @@ import com.example.dine_in_order_api.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class UserServiceImp implements UserService{
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final TableRepository tableRepository;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponce registration(UserRegistrationRequest registrationRequest) {
@@ -36,9 +37,13 @@ public class UserServiceImp implements UserService{
             List<RestaurantTable> tableList = tableRepository.findAll();
         }
         userMapper.mapToUserEntity(registrationRequest, user);
+        encryptPassword(user);
         return userMapper.mapToUserResponce(userRepository.save(user));
     }
-
+    private void encryptPassword(User user){
+       String encodedPassword =  passwordEncoder.encode(user.getPassword());
+       user.setPassword(encodedPassword);
+    }
     @Override
     public UserResponce findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found ,Invaild User Id"));

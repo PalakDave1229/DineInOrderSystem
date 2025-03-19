@@ -11,4 +11,8 @@ spring:
       ddl-auto: update
 app:
   base-url: /api/v1
+  cloudinary:
+    cloud_name: ${CLOUD_NAME}
+    api_key: ${API_KEY}
+    api_secret: ${API_SECRET}
 
