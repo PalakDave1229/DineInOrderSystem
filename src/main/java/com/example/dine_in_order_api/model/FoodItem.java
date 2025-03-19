@@ -67,4 +67,7 @@ public class FoodItem {
     @OneToMany(mappedBy = "foodItem")
     private List<CartItem> cartItems;
 
+    @OneToMany(mappedBy = "foodItem")
+    private List<Image> images;
+
 }

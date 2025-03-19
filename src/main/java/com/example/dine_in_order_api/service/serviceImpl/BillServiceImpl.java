@@ -89,51 +89,51 @@ public class BillServiceImpl implements BillService {
         return billGenerator.generatePdf("billUI", bill);
     }
 
-    private static Map<String, Object> mapOfBillDerails(Bill billDetails) {
-        Map<String, Object> bill = new HashMap<>();
-
-        bill.put("id", billDetails.getBillId());
-
-        bill.put("restaurantName", billDetails.getOrders().getFirst()
-                .getRestaurantTable()
-                .getRestaurent().getName());
-
-        bill.put("tableNo", billDetails.getOrders().getFirst()
-                .getRestaurantTable().getTableNumber());
-
-        bill.put("orders", // orders in one bill
-                billDetails.getOrders().stream().map(order -> {
-                            return Map.of("id", order.getOrderId(),
-                                    "foodItems", order.getCartItems().stream().map(foodItem -> { // cartitems in one order
-                                        return Map.of("name", foodItem.getFoodItem().getName(),
-                                                "price", foodItem.getTotalPrice(),
-                                                "quantity", foodItem.getQuantity()
-                                        );
-                                    }).toList(),
-                                    "totalAmount", order.getTotalAmount()
-                            );
-                        }
-                ).toList()
-        );
-        bill.put("totalAmount", billDetails.getTotalPayableAmount());
-
-        /*
-         * map of bill -> 1) bill id ,
-         *                2) restaurantName ,
-         *                3) table No
-         *                4) list of orders -> (where inside contain
-         *                                  1) orderId and
-         *                                  2) List of cartItems -> ( in that detail of all cart item
-         *                                                     1) name
-         *                                                     2) price
-         *                                                     3) quantity
-         *                                                         ) -- one order can have multiple cartitems
-         *                                 3) total amount of order
-         *                                  ) -- one bill can have multiple orders
-         *                5) bill total amount
-         * */
-
-        return bill;
-    }
+//    private static Map<String, Object> mapOfBillDerails(Bill billDetails) {
+//        Map<String, Object> bill = new HashMap<>();
+//
+//        bill.put("id", billDetails.getBillId());
+//
+//        bill.put("restaurantName", billDetails.getOrders().getFirst()
+//                .getRestaurantTable()
+//                .getRestaurent().getName());
+//
+//        bill.put("tableNo", billDetails.getOrders().getFirst()
+//                .getRestaurantTable().getTableNumber());
+//
+//        bill.put("orders", // orders in one bill
+//                billDetails.getOrders().stream().map(order -> {
+//                            return Map.of("id", order.getOrderId(),
+//                                    "foodItems", order.getCartItems().stream().map(foodItem -> { // cartitems in one order
+//                                        return Map.of("name", foodItem.getFoodItem().getName(),
+//                                                "price", foodItem.getTotalPrice(),
+//                                                "quantity", foodItem.getQuantity()
+//                                        );
+//                                    }).toList(),
+//                                    "totalAmount", order.getTotalAmount()
+//                            );
+//                        }
+//                ).toList()
+//        );
+//        bill.put("totalAmount", billDetails.getTotalPayableAmount());
+//
+//        /*
+//         * map of bill -> 1) bill id ,
+//         *                2) restaurantName ,
+//         *                3) table No
+//         *                4) list of orders -> (where inside contain
+//         *                                  1) orderId and
+//         *                                  2) List of cartItems -> ( in that detail of all cart item
+//         *                                                     1) name
+//         *                                                     2) price
+//         *                                                     3) quantity
+//         *                                                         ) -- one order can have multiple cartitems
+//         *                                 3) total amount of order
+//         *                                  ) -- one bill can have multiple orders
+//         *                5) bill total amount
+//         * */
+//
+//        return bill;
+//    }
 }
 
