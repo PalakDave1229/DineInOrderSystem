@@ -35,7 +35,7 @@ public class BillController {
     @GetMapping("/bills/pdf/{billId}")
     public ResponseEntity<byte[]> findBillById(@PathVariable long billId) throws IOException {
 
-        byte[] billPDF = billService.findBillById(billId);
+        byte[] billPDF = billService.pdfGenerator(billId);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)

@@ -24,7 +24,7 @@ public class TableController {
     @PostMapping("/tables/restaurant/{id}")
     public ResponseEntity<ResponseStructure<TableResponce>> createTable(@PathVariable long id , @RequestBody TableRequest tableRequest){
 
-        TableResponce tableResponce =  tableService.createTable(id,tableRequest);
+      TableResponce tableResponce =  tableService.createTable(id,tableRequest);
 
       return ResponseBuilder.created(tableResponce,"Table created");
     }

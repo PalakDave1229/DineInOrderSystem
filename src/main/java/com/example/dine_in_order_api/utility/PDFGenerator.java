@@ -15,7 +15,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Component
-public class BillGenerator {
+public class PDFGenerator {
 
     private final TemplateEngine templateEngine;
 

@@ -27,7 +27,8 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
        String base_url = appEnv.getBaseUrl();
        return http.csrf(csrf -> csrf.disable())
-                .securityMatchers(match -> match.requestMatchers(base_url+"/**"))
+                .securityMatchers(match -> match.requestMatchers(
+                        base_url+"/**","/login/**","/logout/**"))
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(
                                 base_url+"/register",

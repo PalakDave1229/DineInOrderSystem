@@ -6,6 +6,7 @@ import com.example.dine_in_order_api.dto.responce.FoodItemResponse;
 import com.example.dine_in_order_api.model.Category;
 import com.example.dine_in_order_api.model.CuisineType;
 import com.example.dine_in_order_api.model.FoodItem;
+import com.example.dine_in_order_api.model.Image;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,13 @@ public interface FoodItemMapper {
     public FoodItem mapToFoodItem(FoodItemRequest foodItemRequest);
     public FoodItemResponse mappToFoodItemResponse (FoodItem foodItem);
     public List<FoodItemResponse> mapToListOfFoodItemResponse(List<FoodItem> foodItems);
+    List<String> map(List<Image> value);
+    default String map(Image value){
+        if(value != null){
+            return value.getImageURL();
+        }
+        else return null;
+    }
     default CuisineTypeResponse mapToCuisineTypeResponse(CuisineType value){
         if(value == null) {
             return null;

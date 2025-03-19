@@ -9,5 +9,5 @@ public interface BillService {
 
     public BillResponse findById(long billId);
 
-    byte[] findBillById(long billId) throws IOException;
+    byte[] pdfGenerator(long billId) throws IOException;
 }
