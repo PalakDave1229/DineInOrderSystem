@@ -19,6 +19,7 @@ public class BillController {
 
     private final BillService billService;
 
+
     @PostMapping("/bills/tables/{tableId}")
     public ResponseEntity<ResponseStructure<BillResponse>> createBill(@PathVariable long tableId){
         BillResponse billResponse = billService.createBill(tableId);

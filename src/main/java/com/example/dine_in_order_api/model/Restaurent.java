@@ -4,6 +4,7 @@ import com.example.dine_in_order_api.enums.DietType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -51,6 +52,9 @@ public class Restaurent {
     @CreatedDate
     @Column(name = "created_at")
     private LocalDate createdAt;
+
+    @CreatedBy
+    private String createdBy;
 
     @LastModifiedDate
     @Column(name = "last_modified_at")

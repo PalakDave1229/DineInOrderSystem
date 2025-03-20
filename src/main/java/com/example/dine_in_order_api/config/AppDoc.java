@@ -20,7 +20,6 @@ public class AppDoc {
 
     @Bean
     OpenAPI getOpenAPI () {
-
         return new OpenAPI().info(info());
     }
 

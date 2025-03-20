@@ -8,6 +8,7 @@ import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ public class TableController {
 
     private final TableService tableService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tables/restaurant/{id}")
     public ResponseEntity<ResponseStructure<TableResponce>> createTable(@PathVariable long id , @RequestBody TableRequest tableRequest){
 

@@ -21,6 +21,7 @@ public class CartItemController {
                                                                               @RequestParam int quantity){
         return ResponseBuilder.created(cartItemService.createCartItem(tableid,foodid,quantity),"Cart item created");
     }
+
     @PatchMapping("/cart-items/{cartId}")
     public ResponseEntity<ResponseStructure<CartItemResponse>> updateQuantity(@PathVariable long cartId,@RequestParam int quantity){
         return ResponseBuilder.ok(cartItemService.updateQuantity(cartId,quantity),"cart quantity updated");

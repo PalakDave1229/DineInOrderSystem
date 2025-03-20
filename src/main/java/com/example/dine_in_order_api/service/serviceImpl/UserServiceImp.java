@@ -4,7 +4,6 @@ import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.enums.UserRole;
-import com.example.dine_in_order_api.exception.UserNotFoundException;
 import com.example.dine_in_order_api.mapper.UserMapper;
 import com.example.dine_in_order_api.model.Admin;
 import com.example.dine_in_order_api.model.RestaurantTable;
@@ -12,9 +11,9 @@ import com.example.dine_in_order_api.model.Staff;
 import com.example.dine_in_order_api.model.User;
 import com.example.dine_in_order_api.repository.TableRepository;
 import com.example.dine_in_order_api.repository.UserRepository;
+import com.example.dine_in_order_api.security.util.UserIentity;
 import com.example.dine_in_order_api.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,7 @@ public class UserServiceImp implements UserService{
     private final UserMapper userMapper;
     private final TableRepository tableRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserIentity userIentity;
 
     @Override
     public UserResponce registration(UserRegistrationRequest registrationRequest) {
@@ -45,15 +45,15 @@ public class UserServiceImp implements UserService{
        user.setPassword(encodedPassword);
     }
     @Override
-    public UserResponce findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found ,Invaild User Id"));
+    public UserResponce findById() {
+        User user = userIentity.getCurrentUser();
+        userRepository.findById(Long.valueOf(user.getUserid()));
         return userMapper.mapToUserResponce(user);
     }
 
     @Override
-    public UserResponce updateById(UserRequest userRes, Long userId) {
-         User user =userRepository.findById(userId)
-                   .orElseThrow(() -> new UserNotFoundException("User Not found to update"));
+    public UserResponce updateById(UserRequest userRes) {
+         User user = userIentity.getCurrentUser();
          userMapper.mapToUser(userRes,user);
          return userMapper.mapToUserResponce(userRepository.save(user));
     }

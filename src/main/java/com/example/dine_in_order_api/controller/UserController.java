@@ -21,37 +21,36 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("${app.base-url}")
-@Tag(name ="User controller", description = "Collection of API Endpoints for User Management")
 public class UserController {
 
     private UserService userService;
 
     @PostMapping("/register")
-    @Operation(description = """
-            The API Endpoint is used to register user.
-            The endpoints requires the user to select one of the specified role along with the other details
-            """,
-            responses = {
-                    @ApiResponse(responseCode = "201",description = "User Created"),
-                    @ApiResponse(responseCode = "401", description = "Invalid Input", content = {
-                            @Content(schema = @Schema(implementation = ValidationErrorsStructure.class))
-                    })
-            }
-    )
+//    @Operation(description = """
+//            The API Endpoint is used to register user.
+//            The endpoints require the user to select one of the specified role along with the other details
+//            """,
+//            responses = {
+//                    @ApiResponse(responseCode = "201",description = "User Created"),
+//                    @ApiResponse(responseCode = "401", description = "Invalid Input", content = {
+//                            @Content(schema = @Schema(implementation = ValidationErrorsStructure.class))
+//                    })
+//            }
+//    )
     public ResponseEntity<ResponseStructure<UserResponce>> registration(@Valid @RequestBody UserRegistrationRequest registrationRequest) {
         System.out.println("user name :"+registrationRequest.getUsername());
         UserResponce registration = userService.registration(registrationRequest);
         return ResponseBuilder.created(registration,"Data Stored !!");
     }
+
     //find by id
-    @GetMapping("/User")
-    public ResponseEntity<ResponseStructure<UserResponce>> findById(@RequestParam Long id) {
-        UserResponce user = userService.findById(id);
+    @GetMapping("/account")
+    public ResponseEntity<ResponseStructure<UserResponce>> findById() {
+        UserResponce user = userService.findById();
         return ResponseBuilder.ok(user,"Data Fetched !!");
     }
 
     //update by id
-
     @PutMapping("/User")
     @Operation(description = """
             The API Endpoint is used to update user details.
@@ -64,8 +63,8 @@ public class UserController {
                     })
             }
     )
-    public ResponseEntity<ResponseStructure<UserResponce>> updateById(@RequestBody @Valid UserRequest user, @RequestParam Long userId){
-        UserResponce userRes = userService.updateById(user,userId);
+    public ResponseEntity<ResponseStructure<UserResponce>> updateById(@RequestBody @Valid UserRequest user){
+        UserResponce userRes = userService.updateById(user);
         return ResponseBuilder.ok(userRes,"Data Updated");
     }
 }

@@ -9,6 +9,7 @@ import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class FoodItemController {
 
     private final FoodItemService foodItemService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/fooditems/restaurants/{id}")
     public ResponseEntity<ResponseStructure<FoodItemResponse>> createFoodItem(@PathVariable long id, @RequestBody FoodItemRequest foodItemRequest){
         FoodItemResponse foodItemResponse = foodItemService.createFoodItem(id,foodItemRequest);

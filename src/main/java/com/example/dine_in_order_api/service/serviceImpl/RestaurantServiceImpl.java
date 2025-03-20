@@ -2,6 +2,7 @@ package com.example.dine_in_order_api.service.serviceImpl;
 
 import com.example.dine_in_order_api.dto.request.RestaurantRequest;
 import com.example.dine_in_order_api.dto.responce.RestaurestResponse;
+import com.example.dine_in_order_api.exception.RestaurantNotFoundException;
 import com.example.dine_in_order_api.exception.UserNotFoundException;
 import com.example.dine_in_order_api.mapper.RestaurantMapper;
 import com.example.dine_in_order_api.model.Admin;
@@ -11,6 +12,7 @@ import com.example.dine_in_order_api.model.User;
 import com.example.dine_in_order_api.repository.CuisineRepository;
 import com.example.dine_in_order_api.repository.RestaurentRepository;
 import com.example.dine_in_order_api.repository.UserRepository;
+import com.example.dine_in_order_api.security.util.UserIentity;
 import com.example.dine_in_order_api.service.RestaurentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,32 +25,51 @@ import java.util.List;
 @AllArgsConstructor
 public class RestaurantServiceImpl implements RestaurentService {
 
-    private UserRepository userRepository;
-    private RestaurentRepository restaurentReposetory;
+    private final UserIentity userIentity;
+    private final UserRepository userRepository;
+    private final RestaurentRepository restaurentReposetory;
     private final CuisineRepository cuisineRepository;
-    private RestaurantMapper restaurantMapper;
+    private final RestaurantMapper restaurantMapper;
 
 
     @Override
-    public RestaurestResponse createRestaurant(long userId, RestaurantRequest restaurantRequest) {
-         User user =userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found , Invaild User Id"));
-         if(user instanceof Admin admin){
-             Restaurent restaurent = restaurantMapper.mapToRestaurantEntity(restaurantRequest);
+    public RestaurestResponse createRestaurant(RestaurantRequest restaurantRequest) {
+        User user  = userIentity.getCurrentUser();
 
+             Restaurent restaurent = restaurantMapper.mapToRestaurantEntity(restaurantRequest);
              List<CuisineType> cuisineTypes = this.createNonExistingCuisineTypes(restaurent.getCuisineTypes());
              restaurent.setCuisineTypes(cuisineTypes);
-             restaurent.setAdmin(admin);
+             restaurent.setAdmin((Admin) user);
              restaurentReposetory.save(restaurent);
 
              return restaurantMapper.mapToRestaurantResponce(restaurent);
-         }
-         else {
-             try {
-                 throw new AccessDeniedException("unauthorized operation !!");
-             } catch (AccessDeniedException e) {
-                 throw new RuntimeException(e);
-             }
-         }
+
+    }
+
+    public RestaurestResponse updateRestaurant(RestaurantRequest restaurantRequest,Long restaurantId){
+        User user  = userIentity.getCurrentUser();
+
+        if(user instanceof Admin admin){
+
+            admin.getRestaurents().stream().filter(
+                    restaurent -> restaurantId == restaurent.getRestaurantId()).findFirst()
+                    .orElseThrow(() -> new RestaurantNotFoundException("Restaurant not found with ID:" + restaurantId));
+
+            Restaurent restaurent = restaurantMapper.mapToRestaurantEntity(restaurantRequest);
+
+            List<CuisineType> cuisineTypes = this.createNonExistingCuisineTypes(restaurent.getCuisineTypes());
+
+            restaurent.setCuisineTypes(cuisineTypes);
+
+            return restaurantMapper.mapToRestaurantResponce(restaurentReposetory.save(restaurent));
+        }
+        else {
+            try {
+                throw new AccessDeniedException("unauthorized operation !!");
+            } catch (AccessDeniedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private List<CuisineType> createNonExistingCuisineTypes(List<CuisineType> cuisineTypes) {

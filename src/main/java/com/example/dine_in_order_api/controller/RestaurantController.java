@@ -14,36 +14,56 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("${app.base-url}")
-@Tag(name ="User controller", description = "Collection of API Endpoints for Restaurant Management")
+@Tag(name ="Restaurant controller", description = "Collection of API Endpoints for Restaurant Management")
 public class RestaurantController {
 
     private RestaurentService restaurentService;
 
-    @PostMapping("/Restaurant/{userId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/restaurant")
     @Operation(description = """
             The API Endpoint is used to Add Restaurant details.
             The endpoints requires the  Restaurant to select one of the specified role along with the other details.            
             """,
-            responses = {
-                    @ApiResponse(responseCode = "200" ,description = "Restaurant Added"),
-                    @ApiResponse(responseCode = "401" , description = "Invaild Input" , content = {
-                            @Content(schema = @Schema(implementation = ValidationErrorsStructure.class))
-                    })
+            responses = {@ApiResponse(responseCode = "200" ,description = "Restaurant Added"),
+                         @ApiResponse(responseCode = "401" , description = "Invaild Input" ,
+                    content = {@Content(schema = @Schema(implementation = ValidationErrorsStructure.class))})
             }
     )
-    public ResponseEntity<ResponseStructure<RestaurestResponse>> createRestaurant(
-            @PathVariable long userId,@Valid @RequestBody RestaurantRequest restaurantRequest){
+    public ResponseEntity<ResponseStructure<RestaurestResponse>>
+    createRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest){
 
         RestaurestResponse restaurestResponse =
-                restaurentService.createRestaurant(userId,restaurantRequest);
+                restaurentService.createRestaurant(restaurantRequest);
 
         return ResponseBuilder.created(
                 restaurestResponse, "Restaurant Added successfully !! ");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/restaurant")
+    @Operation(description = """
+            The API Endpoint is used to update Restaurant details.
+            The endpoints requires the Restaurant to select one of the specified role along with the other details.            
+            """,
+            responses = {@ApiResponse(responseCode = "200" ,description = "Restaurant Updated"),
+                    @ApiResponse(responseCode = "401" , description = "Invaild Input" ,
+                            content = {@Content(schema = @Schema(implementation = ValidationErrorsStructure.class))})
+            }
+    )
+    public ResponseEntity<ResponseStructure<RestaurestResponse>> updateRestaurant(
+            @PathVariable long restaurantId,@Valid @RequestBody RestaurantRequest restaurantRequest){
+
+        RestaurestResponse restaurestResponse =
+                restaurentService.updateRestaurant(restaurantRequest,restaurantId);
+
+        return ResponseBuilder.created(
+                restaurestResponse, "Restaurant Updated !!");
+    }
 }
