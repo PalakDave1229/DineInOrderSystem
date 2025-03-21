@@ -49,7 +49,7 @@ public class ResponseBuilder {
      * @return
      */
 
-    public static <T> ResponseEntity<ResponseStructure<T>> success(T data, HttpStatus httpStatus, String message, HttpHeaders headers) {
+    public static <T> ResponseEntity<ResponseStructure<T>> success( HttpStatus httpStatus,HttpHeaders headers, String message,T data) {
         ResponseStructure<T> res =  ResponseStructure.<T>builder()
                 .message(message)
                 .httpStatus(httpStatus.value())
@@ -76,6 +76,9 @@ public class ResponseBuilder {
     }
     public static <T> ResponseEntity<ListResponseStructure<T>> ok(List<T> data,String message){
         return success(data,HttpStatus.OK,message);
+    }
+    public static <T> ResponseEntity<ResponseStructure<T>> ok(HttpHeaders httpHeaders,T data,String message){
+        return success(HttpStatus.OK,httpHeaders,message,data);
     }
 
 
