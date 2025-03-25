@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Getter
 @Setter
@@ -37,6 +39,13 @@ public class AppEnv {
     public static class Security{
         private String secret;
         private TokenValidity tokenValidity;
+        private List<String> publicEndpoints;
+
+        @Getter
+        @Setter
+        public static class PublicEndpoint{
+            private List<String> list;
+        }
 
         @Getter
         @Setter

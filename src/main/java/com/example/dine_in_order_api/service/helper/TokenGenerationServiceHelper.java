@@ -43,7 +43,7 @@ public class TokenGenerationServiceHelper{
 
     }
 
-    private TokenPayload generateTokenPayload(TokenType tokenType,Map<String,Object> claims, Instant shouldExpireAt){
+    public TokenPayload generateTokenPayload(TokenType tokenType, Map<String, Object> claims, Instant shouldExpireAt){
 
         Instant issueAt = calculateIssueTime(tokenType, shouldExpireAt);
 

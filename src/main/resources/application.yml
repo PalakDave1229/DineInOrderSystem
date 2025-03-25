@@ -16,6 +16,11 @@ app:
     secure: ${DOMAIN_SECURE}
     same-site: ${DOMAIN_SAME_SITE}
   security:
+    public-endpoints:
+      - http://localhost:8080/logout
+      - /login
+      - /restaurants/{restaurantId}/fooditems
+      - /register
     secret: ${SECURITY_SECRET}
     token-validity:
       access-validity: 3600

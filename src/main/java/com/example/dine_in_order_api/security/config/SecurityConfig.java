@@ -1,11 +1,14 @@
 package com.example.dine_in_order_api.security.config;
 
 import com.example.dine_in_order_api.config.AppEnv;
+import com.example.dine_in_order_api.security.fillters.AuthFillter;
+import com.example.dine_in_order_api.security.fillters.RefreshAuthFillter;
+import com.example.dine_in_order_api.security.jwt.JWTService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +17,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -21,7 +27,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final JWTService jwtService;
     private final AppEnv appEnv;
+
+    private String[] getPublicEndpoints(){
+         String[] endpoints = new String[appEnv.getSecurity().getPublicEndpoints().size()];
+         for(int i = 0 ; i<appEnv.getSecurity().getPublicEndpoints().size();i++){
+             endpoints[i] = appEnv.getBaseUrl() + appEnv.getSecurity().getPublicEndpoints().get(i);
+         }
+         return endpoints;
+    }
 
     @Bean
     AuthenticationManager authenticationManager
@@ -35,6 +50,7 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(2)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
        String base_url = appEnv.getBaseUrl();
@@ -42,17 +58,39 @@ public class SecurityConfig {
        return http.csrf(csrf -> csrf.disable())
 
                 .securityMatchers(match -> match.requestMatchers(
-                        base_url+"/**","/login/**","/logout/**"))
+                        base_url+"/**"))
 
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers(
-                                base_url+"/register",
-                                        base_url+"/login",
-                                        "http://localhost:8080/logout",
-                                        base_url+"/restaurants/{restaurantId}/fooditems"
-                        ).permitAll()
+                        authorize.requestMatchers(getPublicEndpoints())
+                        .permitAll()
                         .anyRequest().authenticated())
-               .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new AuthFillter(jwtService), UsernamePasswordAuthenticationFilter.class)
+
+                .build();
+    }
+
+    @Bean
+    @Order(1)
+    SecurityFilterChain refreshFilterChain(HttpSecurity http) throws Exception {
+
+        String base_url = appEnv.getBaseUrl();
+
+        return http.csrf(csrf -> csrf.disable())
+
+                .securityMatchers(match -> match.requestMatchers(
+                        base_url+"/refresh-login/**"))
+
+                .authorizeHttpRequests(authorize ->
+                        authorize.anyRequest().authenticated())
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .addFilterBefore(new RefreshAuthFillter(jwtService)
+                        , UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
