@@ -14,6 +14,7 @@ import com.example.dine_in_order_api.service.BillService;
 import com.example.dine_in_order_api.utility.PDFGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,30 +35,35 @@ public class BillServiceImpl implements BillService {
     private final CartItemRepository cartItemRepository;
 
     @Override
+    @Transactional
     public BillResponse createBill(long tableId) {
 
         RestaurantTable restaurantTable = tableRepository.findById(tableId)
                 .orElseThrow(() -> new NoSuchElementException("Table not found !!"));
 
         List<Order> orderList = orderRepository.findByRestaurantTable(restaurantTable, OrderStatus.PAID);
+
         double totalAmount = orderList.stream()
                 .mapToDouble(Order::getTotalAmount)
                 .sum();
-        Bill bill = null;
+
         if (!orderList.isEmpty()) {
-            bill = new Bill();
+
+            Bill bill = new Bill();
             bill.setOrders(orderList);
             bill.setTotalPayableAmount(totalAmount);
             billRepository.save(bill);
+
+            orderList.forEach(order -> order.setOrderStatus(OrderStatus.PAID));
+            orderRepository.saveAll(orderList);
+
+            restaurantTable.setStatus(TableStatus.AVAILABLE);
+            tableRepository.save(restaurantTable);
+
+            return billMapper.mapToBillResponse(bill);
         } else {
             throw new NoSuchElementException(" No CartItem Selected !! ");
         }
-        orderList.forEach(order -> order.setOrderStatus(OrderStatus.PAID));
-        restaurantTable.setStatus(TableStatus.AVAILABLE);
-        tableRepository.save(restaurantTable);
-        orderRepository.saveAll(orderList);
-
-        return billMapper.mapToBillResponse(bill);
     }
 
     @Override

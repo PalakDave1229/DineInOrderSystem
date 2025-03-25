@@ -21,7 +21,6 @@ public class UserRegistrationRequest {
     @Password()
     private String password;
 
-    @PhoneNo
     private String phno;
 
     @MinValue

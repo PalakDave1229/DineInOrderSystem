@@ -12,8 +12,10 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order,Long> {
 
-    @Query("SELECT o FROM com.example.dine_in_order_api.model.Order o WHERE o.restaurantTable = :table AND o.orderStatus <> :status")
-    List<Order> findByRestaurantTable(@Param("table") RestaurantTable table, @Param("status") OrderStatus status);
+    @Query("SELECT o FROM Order o WHERE "+
+                                        "o.restaurantTable = :table AND o.orderStatus <> :status")
+    List<Order> findByRestaurantTable(@Param("table") RestaurantTable table,
+                                      @Param("status") OrderStatus status);
 
     Order findRestaurantTableByOrderId(long id);
 
