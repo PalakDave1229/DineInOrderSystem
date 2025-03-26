@@ -2,6 +2,7 @@ package com.example.dine_in_order_api.security.fillters;
 
 import com.example.dine_in_order_api.security.jwt.ClaimName;
 import com.example.dine_in_order_api.security.jwt.JWTService;
+import com.example.dine_in_order_api.security.jwt.TokenBlackListService;
 import com.example.dine_in_order_api.security.jwt.TokenType;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -24,13 +25,15 @@ import java.util.List;
 public class RefreshAuthFillter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
+    private final TokenBlackListService tokenBlackListService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Cookie[] cookies =request.getCookies();
         String token = FillterHalper.extractToken(TokenType.REFRESH,cookies);
 
-        if(token != null){
+
+        if(token != null || tokenBlackListService.isBlackListed(token)){
             log.info("token found : {}",TokenType.REFRESH.type());
             Claims claims = jwtService.parseToken(token);
 

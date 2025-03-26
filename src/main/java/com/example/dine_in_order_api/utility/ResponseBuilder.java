@@ -61,6 +61,17 @@ public class ResponseBuilder {
 
     }
 
+    public static  ResponseEntity<SimpleResponseStructure> success(HttpStatus httpStatus,HttpHeaders httpHeaders,String message) {
+        SimpleResponseStructure res =  SimpleResponseStructure.builder()
+                .message(message)
+                .httpStatus(httpStatus.value())
+                .build();
+
+        return ResponseEntity.status(httpStatus)
+                .headers(httpHeaders)
+                .body(res);
+    }
+
     /**
      * helps creating the ok method for success response with
      * data including the httpstatus code , message and data itself

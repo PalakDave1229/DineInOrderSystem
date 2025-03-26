@@ -4,6 +4,7 @@ import com.example.dine_in_order_api.config.AppEnv;
 import com.example.dine_in_order_api.security.fillters.AuthFillter;
 import com.example.dine_in_order_api.security.fillters.RefreshAuthFillter;
 import com.example.dine_in_order_api.security.jwt.JWTService;
+import com.example.dine_in_order_api.security.jwt.TokenBlackListService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +30,13 @@ public class SecurityConfig {
 
     private final JWTService jwtService;
     private final AppEnv appEnv;
+    private final TokenBlackListService tokenBlackListService;
 
     private String[] getPublicEndpoints(){
          String[] endpoints = new String[appEnv.getSecurity().getPublicEndpoints().size()];
          for(int i = 0 ; i<appEnv.getSecurity().getPublicEndpoints().size();i++){
              endpoints[i] = appEnv.getBaseUrl() + appEnv.getSecurity().getPublicEndpoints().get(i);
+             System.out.println(endpoints[i]);
          }
          return endpoints;
     }
@@ -61,13 +64,15 @@ public class SecurityConfig {
                         base_url+"/**"))
 
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers(getPublicEndpoints())
-                        .permitAll()
+                        authorize.requestMatchers(
+                                getPublicEndpoints()
+                                ).permitAll()
                         .anyRequest().authenticated())
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new AuthFillter(jwtService), UsernamePasswordAuthenticationFilter.class)
+
+                .addFilterBefore(new AuthFillter(jwtService,tokenBlackListService), UsernamePasswordAuthenticationFilter.class)
 
                 .build();
     }
@@ -89,7 +94,7 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .addFilterBefore(new RefreshAuthFillter(jwtService)
+                .addFilterBefore(new RefreshAuthFillter(jwtService,tokenBlackListService)
                         , UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -23,6 +23,5 @@ public class UserRegistrationRequest {
 
     private String phno;
 
-    @MinValue
     private UserRole userrole;
 }

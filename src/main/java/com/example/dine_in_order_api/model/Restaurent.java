@@ -36,7 +36,7 @@ public class Restaurent {
     @Column(name = "Phone_no")
     private String contactNumber;
 
-    @Column(name = "email")
+    @Column(name = "email",unique = true)
     private String contactEmail;
 
     @Column(name = "open_at")

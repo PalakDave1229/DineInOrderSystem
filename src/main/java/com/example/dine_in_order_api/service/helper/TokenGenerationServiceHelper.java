@@ -4,6 +4,7 @@ import com.example.dine_in_order_api.config.AppEnv;
 import com.example.dine_in_order_api.security.jwt.JWTService;
 import com.example.dine_in_order_api.security.jwt.TokenPayload;
 import com.example.dine_in_order_api.security.jwt.TokenType;
+import com.example.dine_in_order_api.security.util.CookieManager;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ public class TokenGenerationServiceHelper{
 
     private final JWTService jwtService;
     private final AppEnv appEnv;
+    private final CookieManager cookieManager;
 
     public String generateToken(TokenType tokenType,Map<String,Object> claims, Instant shouldExpireAt){
 
@@ -27,20 +29,7 @@ public class TokenGenerationServiceHelper{
 
         long maxAge = Duration.between(Instant.now(),shouldExpireAt).getSeconds();
 
-        return generateCookie(tokenType,token,maxAge);
-    }
-
-    private String generateCookie(TokenType tokenType, String token,long maxAge){
-
-         return ResponseCookie.from(tokenType.type(),token)
-                 .domain(appEnv.getDomain().getName())
-                 .path("/")
-                 .sameSite(appEnv.getDomain().getSameSite())
-                 .httpOnly(true)
-                 .secure(appEnv.getDomain().isSecure())
-                 .maxAge(maxAge)
-                 .build().toString();
-
+        return cookieManager.generateCookie(tokenType.type(),token,maxAge);
     }
 
     public TokenPayload generateTokenPayload(TokenType tokenType, Map<String, Object> claims, Instant shouldExpireAt){
