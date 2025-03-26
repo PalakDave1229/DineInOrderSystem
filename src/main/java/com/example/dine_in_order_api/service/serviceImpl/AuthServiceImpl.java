@@ -3,19 +3,21 @@ package com.example.dine_in_order_api.service.serviceImpl;
 import com.example.dine_in_order_api.config.AppEnv;
 import com.example.dine_in_order_api.dto.request.AuthRecord;
 import com.example.dine_in_order_api.dto.request.LoginRequest;
+import com.example.dine_in_order_api.exception.CustomAuthenticationException;
 import com.example.dine_in_order_api.exception.UserNotFoundException;
 import com.example.dine_in_order_api.model.User;
 import com.example.dine_in_order_api.repository.UserRepository;
-import com.example.dine_in_order_api.security.jwt.ClaimName;
-import com.example.dine_in_order_api.security.jwt.JWTService;
-import com.example.dine_in_order_api.security.jwt.TokenPayload;
-import com.example.dine_in_order_api.security.jwt.TokenType;
+import com.example.dine_in_order_api.security.jwt.*;
+import com.example.dine_in_order_api.security.util.CookieManager;
 import com.example.dine_in_order_api.service.AuthService;
 import com.example.dine_in_order_api.service.TokenGenerationService;
 import com.example.dine_in_order_api.service.helper.TokenGenerationServiceHelper;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,22 +36,27 @@ public class AuthServiceImpl implements AuthService {
     private final JWTService jwtService;
     private final TokenGenerationServiceHelper tokenGenerationServiceHelper;
     private final TokenGenerationService tokenGenerationService;
+    private final TokenBlackListService tokenBlackListService;
+    private final CookieManager cookieManager;
 
     @Override
     public AuthRecord login(LoginRequest loginRequest) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken
-                (loginRequest.email(),loginRequest.password());
-        Authentication authentication = authenticationManager.authenticate(token);
-        if(authentication.isAuthenticated()){
+
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(token);
+            if (!authentication.isAuthenticated()) {
+                throw new BadCredentialsException("Authentication failed. Invalid credentials.");
+            }
             User user = userRepository.findByEmail(loginRequest.email())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found !!"));
             return generateAuthRecord(user);
-        }
-        else {
-            throw new UsernameNotFoundException("Failed to authenticate !!");
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid username or password");
         }
     }
-
     @Override
     public AuthRecord refreshLogin(String refreshToken){
         Claims claims = jwtService.parseToken(refreshToken);
@@ -74,7 +81,21 @@ public class AuthServiceImpl implements AuthService {
         return authRecord;
     }
 
-    private AuthRecord generateAuthRecord(User user) {
+    @Override
+    public HttpHeaders logout(String refreshToken, String accessToken) {
+        tokenBlackListService.blackListToken(refreshToken);
+        tokenBlackListService.blackListToken(accessToken);
+
+        String refreshCookie = cookieManager.generateCookie(TokenType.REFRESH.type(), "",0);
+        String accessCookie =  cookieManager.generateCookie(TokenType.ACCESS.type(), "",0);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.SET_COOKIE,refreshCookie);
+        httpHeaders.add(HttpHeaders.SET_COOKIE,accessCookie);
+        return httpHeaders;
+    }
+
+    private AuthRecord  generateAuthRecord(User user) {
         Instant now = Instant.now();
         long accessExpiration = now.plusSeconds(appEnv.getSecurity().getTokenValidity().getAccessValidity()).toEpochMilli();
         long refreshExpiration =now.plusSeconds(appEnv.getSecurity().getTokenValidity().getRefreshValidity()).toEpochMilli();

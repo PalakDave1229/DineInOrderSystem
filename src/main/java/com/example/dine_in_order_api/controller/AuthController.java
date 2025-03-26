@@ -8,6 +8,7 @@ import com.example.dine_in_order_api.service.AuthService;
 import com.example.dine_in_order_api.service.TokenGenerationService;
 import com.example.dine_in_order_api.utility.ResponseBuilder;
 import com.example.dine_in_order_api.utility.ResponseStructure;
+import com.example.dine_in_order_api.utility.SimpleResponseStructure;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,5 +40,11 @@ public class AuthController {
       AuthRecord authRecord = authService.refreshLogin(refreshToken);
       HttpHeaders httpHeaders = tokenGenerationService.grantAccessToken(authRecord);
       return ResponseBuilder.success(HttpStatus.OK,httpHeaders,"New Access Token Generated !!",authRecord);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<SimpleResponseStructure> logout(@CookieValue("rt") String refreshToken,@CookieValue("at") String accessToken){
+        HttpHeaders httpHeaders = authService.logout(refreshToken,accessToken);
+        return ResponseBuilder.success(HttpStatus.OK, httpHeaders,"logout !!");
     }
 }

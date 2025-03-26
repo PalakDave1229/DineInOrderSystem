@@ -15,8 +15,6 @@ import lombok.Setter;
 @Setter
 public class UserRequest {
 
-    @NotBlank(message = "can not be blank !!")
-    @MinValue
     @Names
     private String username;
 

@@ -16,6 +16,7 @@ import com.example.dine_in_order_api.repository.FoodItemRepository;
 import com.example.dine_in_order_api.repository.RestaurentRepository;
 import com.example.dine_in_order_api.service.FoodItemService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,6 +86,7 @@ public class FoodItemserviceImpl implements FoodItemService {
     }
 
     @Override
+    @Cacheable(cacheNames = "food-item-cache",key = "#restaurantId")
     public List<FoodItemResponse> findByRestaurantId(long restaurantId) {
 
         Restaurent restaurent = restaurentRepository.findById(restaurantId)

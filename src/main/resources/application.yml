@@ -17,7 +17,6 @@ app:
     same-site: ${DOMAIN_SAME_SITE}
   security:
     public-endpoints:
-      - http://localhost:8080/logout
       - /login
       - /restaurants/{restaurantId}/fooditems
       - /register
