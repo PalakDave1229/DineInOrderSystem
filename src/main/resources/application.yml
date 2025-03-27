@@ -19,7 +19,7 @@ app:
     public-endpoints:
       - /login
       - /restaurants/{restaurantId}/fooditems
-      - /register
+      - /admin-register
     secret: ${SECURITY_SECRET}
     token-validity:
       access-validity: 3600

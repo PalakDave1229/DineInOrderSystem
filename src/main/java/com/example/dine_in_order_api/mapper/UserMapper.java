@@ -39,4 +39,6 @@ public interface UserMapper {
        * @return userResponse object to send restricted attribute
        */
       UserResponce mapToUserResponce(User user);
+
+    User mapToUser(UserRegistrationRequest registrationRequest);
 }

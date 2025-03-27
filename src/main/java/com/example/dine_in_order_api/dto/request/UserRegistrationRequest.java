@@ -25,5 +25,4 @@ public class UserRegistrationRequest {
     @PhoneNo
     private String phno;
 
-    private UserRole userrole;
 }
