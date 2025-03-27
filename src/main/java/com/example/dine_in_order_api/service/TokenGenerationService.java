@@ -24,6 +24,7 @@ public class TokenGenerationService{
          Map<String,Object> claim = setClaims(authRecord);
 
          String accessCookie = tokenGenerationServiceHelper.generateToken(TokenType.ACCESS,claim, Instant.ofEpochMilli(authRecord.accessExpiration()));
+         System.out.println("ohh we got cookie with access token"+accessCookie);
 
          HttpHeaders httpHeaders = new HttpHeaders();
          httpHeaders.add(HttpHeaders.SET_COOKIE,accessCookie);
@@ -47,7 +48,9 @@ public class TokenGenerationService{
          return Map.of(
                        ClaimName.USER_ID,authRecord.userId(),
                        ClaimName.USER_EMAIL,authRecord.email(),
-                       ClaimName.USER_role,authRecord.userRole().name());
+                       ClaimName.USER_role,authRecord.userRole().name(),
+                       ClaimName.USER_NAME,authRecord.name()
+         );
      }
 
 }

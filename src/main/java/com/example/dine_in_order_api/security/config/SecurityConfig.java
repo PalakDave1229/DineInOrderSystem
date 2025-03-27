@@ -36,7 +36,6 @@ public class SecurityConfig {
          String[] endpoints = new String[appEnv.getSecurity().getPublicEndpoints().size()];
          for(int i = 0 ; i<appEnv.getSecurity().getPublicEndpoints().size();i++){
              endpoints[i] = appEnv.getBaseUrl() + appEnv.getSecurity().getPublicEndpoints().get(i);
-             System.out.println(endpoints[i]);
          }
          return endpoints;
     }
@@ -55,45 +54,32 @@ public class SecurityConfig {
     @Bean
     @Order(2)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
        String base_url = appEnv.getBaseUrl();
-
        return http.csrf(csrf -> csrf.disable())
-
                 .securityMatchers(match -> match.requestMatchers(
                         base_url+"/**"))
-
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(
                                 getPublicEndpoints()
                                 ).permitAll()
                         .anyRequest().authenticated())
-
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
                 .addFilterBefore(new AuthFillter(jwtService,tokenBlackListService), UsernamePasswordAuthenticationFilter.class)
-
                 .build();
     }
 
     @Bean
     @Order(1)
     SecurityFilterChain refreshFilterChain(HttpSecurity http) throws Exception {
-
         String base_url = appEnv.getBaseUrl();
-
         return http.csrf(csrf -> csrf.disable())
-
                 .securityMatchers(match -> match.requestMatchers(
                         base_url+"/refresh-login/**"))
-
                 .authorizeHttpRequests(authorize ->
                         authorize.anyRequest().authenticated())
-
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
                 .addFilterBefore(new RefreshAuthFillter(jwtService,tokenBlackListService)
                         , UsernamePasswordAuthenticationFilter.class)
                 .build();
