@@ -36,11 +36,12 @@ public class AuthFillter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("validating request , finding token  : {}",TokenType.ACCESS.type());
          Cookie[] cookies =request.getCookies();
-         String token = FillterHalper.extractToken(TokenType.ACCESS,cookies);
-         if(token != null){
-             if (!tokenBlackListService.isBlackListed(token)) {
+         String accessToken = FillterHalper.extractToken(TokenType.ACCESS,cookies);
+         String refreshToken = FillterHalper.extractToken(TokenType.REFRESH,cookies);
+         if(accessToken != null){
+             if (!tokenBlackListService.isBlackListed(accessToken)) {
                  log.info("token found : {}", TokenType.ACCESS.type());
-                 Claims claims = jwtService.parseToken(token);
+                 Claims claims = jwtService.parseToken(accessToken);
 
                  String email = claims.get(ClaimName.USER_EMAIL, String.class);
                  String role = claims.get(ClaimName.USER_role, String.class);
@@ -58,7 +59,10 @@ public class AuthFillter extends OncePerRequestFilter {
                  }
              }
          }
-         else{
+        else if(refreshToken!= null){
+
+        } else{
+
              log.warn("Token not found with name : {}",TokenType.ACCESS.type());
          }
          filterChain.doFilter(request,response);

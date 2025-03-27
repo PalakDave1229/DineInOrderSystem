@@ -3,6 +3,8 @@ package com.example.dine_in_order_api.service.serviceImpl;
 import com.example.dine_in_order_api.config.AppEnv;
 import com.example.dine_in_order_api.dto.request.AuthRecord;
 import com.example.dine_in_order_api.dto.request.LoginRequest;
+import com.example.dine_in_order_api.dto.responce.UserResponce;
+import com.example.dine_in_order_api.enums.UserRole;
 import com.example.dine_in_order_api.exception.CustomAuthenticationException;
 import com.example.dine_in_order_api.exception.UserNotFoundException;
 import com.example.dine_in_order_api.model.User;
@@ -11,9 +13,9 @@ import com.example.dine_in_order_api.security.jwt.*;
 import com.example.dine_in_order_api.security.util.CookieManager;
 import com.example.dine_in_order_api.service.AuthService;
 import com.example.dine_in_order_api.service.TokenGenerationService;
+import com.example.dine_in_order_api.service.UserService;
 import com.example.dine_in_order_api.service.helper.TokenGenerationServiceHelper;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.Cookie;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,9 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.time.Instant;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -38,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
     private final TokenGenerationService tokenGenerationService;
     private final TokenBlackListService tokenBlackListService;
     private final CookieManager cookieManager;
+    private final UserService userService;
 
     @Override
     public AuthRecord login(LoginRequest loginRequest) {
@@ -62,23 +63,21 @@ public class AuthServiceImpl implements AuthService {
         Claims claims = jwtService.parseToken(refreshToken);
 
         String email = claims.get(ClaimName.USER_EMAIL, String.class);
+        long id = claims.get(ClaimName.USER_ID, Long.class);
+        String name = claims.get(ClaimName.USER_NAME, String.class);
+        String role = claims.get(ClaimName.USER_role,String.class);
         long refereshExpiration = claims.getExpiration().toInstant().toEpochMilli();
+        long accessExpiration = Instant.now().plusSeconds(
+                appEnv.getSecurity().getTokenValidity().getAccessValidity()).toEpochMilli();
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found !!"));;
-
-        long accessExpiration = Instant.now().plusSeconds(3600).toEpochMilli();
-
-        AuthRecord authRecord = new AuthRecord(
-                user.getUserid(),
-                user.getUsername(),
+        return new AuthRecord(
+                id,
+                name,
                 email,
-                user.getUserrole(),
+                UserRole.valueOf(role),
                 accessExpiration,
                 refereshExpiration
         );
-
-        return authRecord;
     }
 
     @Override

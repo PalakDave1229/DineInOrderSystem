@@ -3,6 +3,7 @@ package com.example.dine_in_order_api.dto.request;
 import com.example.dine_in_order_api.dto.constraints.*;
 import com.example.dine_in_order_api.dto.constraints.Email;
 import com.example.dine_in_order_api.enums.UserRole;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,12 +16,13 @@ public class UserRegistrationRequest {
     @Names
     private String username;
 
-    @Email(message = "email is not vaild")
+    @Email(message = "email is not valid")
     private String email;
 
-    @Password()
+    @Password
     private String password;
 
+    @PhoneNo
     private String phno;
 
     private UserRole userrole;

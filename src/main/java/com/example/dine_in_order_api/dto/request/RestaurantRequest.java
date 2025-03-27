@@ -5,6 +5,7 @@ import com.example.dine_in_order_api.dto.constraints.MinValue;
 import com.example.dine_in_order_api.dto.constraints.Names;
 import com.example.dine_in_order_api.dto.constraints.PhoneNo;
 import com.example.dine_in_order_api.enums.DietType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import jdk.jfr.Name;
 import lombok.Getter;
@@ -25,17 +26,23 @@ public class RestaurantRequest {
     @NotBlank
     private String address;
 
+    @PhoneNo
     private String contactNumber;
 
     @Email
     private String contactEmail;
 
-    @NotNull(message = "Restaurant can not be null !!")
+    @NotNull(message = "open timing can not be null !!")
     private LocalTime opensAt;
 
-    @NotNull(message = "Restaurant can not be null !!")
+    @NotNull(message = "close timing can not be null !!")
     private LocalTime closeAt;
 
-    private List<DietType> dietTypes;
-    private List<String> cuisineTypes;
+    @NotEmpty(message = "Diet types cannot be empty !!")
+    @Valid
+    private List<@NotNull(message = "Diet type cannot be null !!") DietType> dietTypes;
+
+    @NotEmpty(message = "Cuisine types cannot be empty !!")
+    @Valid
+    private List<@NotBlank(message = "Cuisine type cannot be blank !!") String> cuisineTypes;
 }
