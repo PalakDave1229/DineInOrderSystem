@@ -36,18 +36,16 @@ public class AuthFillter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("validating request , finding token  : {}",TokenType.ACCESS.type());
          Cookie[] cookies =request.getCookies();
-         String accessToken = FillterHalper.extractToken(TokenType.ACCESS,cookies);
-         String refreshToken = FillterHalper.extractToken(TokenType.REFRESH,cookies);
-         if(accessToken != null){
-             if (!tokenBlackListService.isBlackListed(accessToken)) {
+         String token = FillterHalper.extractToken(TokenType.ACCESS,cookies);
+         if(token != null){
+             if (!tokenBlackListService.isBlackListed(token)) {
                  log.info("token found : {}", TokenType.ACCESS.type());
-                 Claims claims = jwtService.parseToken(accessToken);
+                 Claims claims = jwtService.parseToken(token);
 
                  String email = claims.get(ClaimName.USER_EMAIL, String.class);
                  String role = claims.get(ClaimName.USER_role, String.class);
 
                  if ((email != null && !email.isBlank()) && (role != null && !role.isBlank())) {
-
                      if (SecurityContextHolder.getContext().getAuthentication() == null) {
                          UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                  email,
@@ -59,10 +57,7 @@ public class AuthFillter extends OncePerRequestFilter {
                  }
              }
          }
-        else if(refreshToken!= null){
-
-        } else{
-
+         else{
              log.warn("Token not found with name : {}",TokenType.ACCESS.type());
          }
          filterChain.doFilter(request,response);

@@ -4,6 +4,7 @@ package com.example.dine_in_order_api.service;
 import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
+import jakarta.validation.Valid;
 
 public interface UserService {
 
@@ -33,4 +34,6 @@ public interface UserService {
      * @return updated data of user
      */
     public UserResponce updateById(UserRequest user);
+
+    UserResponce staffRegistration(@Valid UserRegistrationRequest registrationRequest, long id);
 }

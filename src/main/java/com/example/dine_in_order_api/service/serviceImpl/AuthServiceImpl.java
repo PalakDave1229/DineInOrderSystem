@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             Authentication authentication = authenticationManager.authenticate(token);
-            if (!authentication.isAuthenticated()) {
+            if (!authentication.isAuthenticated()){
                 throw new BadCredentialsException("Authentication failed. Invalid credentials.");
             }
             User user = userRepository.findByEmail(loginRequest.email())

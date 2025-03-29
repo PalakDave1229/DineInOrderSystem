@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,7 +26,7 @@ public class UserController {
 
     private UserService userService;
 
-    @PostMapping("/register")
+
 //    @Operation(description = """
 //            The API Endpoint is used to register user.
 //            The endpoints require the user to select one of the specified role along with the other details
@@ -37,13 +38,19 @@ public class UserController {
 //                    })
 //            }
 //    )
-    public ResponseEntity<ResponseStructure<UserResponce>> registration(@Valid @RequestBody UserRegistrationRequest registrationRequest) {
-        System.out.println("user name :"+registrationRequest.getUsername());
+    @PostMapping("/admin-register")
+    public ResponseEntity<ResponseStructure<UserResponce>> registration(@Valid @RequestBody UserRegistrationRequest registrationRequest){
         UserResponce registration = userService.registration(registrationRequest);
         return ResponseBuilder.created(registration,"Data Stored !!");
     }
 
-    //find by id
+    @PostMapping("/staff-register/restaurants/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ResponseStructure<UserResponce>> staffRegistration(@Valid @RequestBody UserRegistrationRequest registrationRequest,@PathVariable long id){
+        UserResponce registration = userService.staffRegistration(registrationRequest,id);
+        return ResponseBuilder.created(registration, "Data Stored !!");
+    }
+
     @GetMapping("/account")
     public ResponseEntity<ResponseStructure<UserResponce>> findById() {
         UserResponce user = userService.findById();

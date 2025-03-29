@@ -14,8 +14,6 @@ import java.util.List;
 @Setter
 @Entity
 public class Admin extends User{
-
     @OneToMany(mappedBy = "admin")
     private List<Restaurent> restaurents;
-
 }
