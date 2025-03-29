@@ -1,23 +1,27 @@
 package com.example.dine_in_order_api.service.serviceImpl;
 
+import com.example.dine_in_order_api.config.AppEnv;
 import com.example.dine_in_order_api.dto.request.UserRegistrationRequest;
 import com.example.dine_in_order_api.dto.request.UserRequest;
 import com.example.dine_in_order_api.dto.responce.UserResponce;
 import com.example.dine_in_order_api.enums.UserRole;
+import com.example.dine_in_order_api.exception.IllegalRequestException;
+import com.example.dine_in_order_api.exception.RestaurantNotFoundException;
 import com.example.dine_in_order_api.mapper.UserMapper;
-import com.example.dine_in_order_api.model.Admin;
-import com.example.dine_in_order_api.model.RestaurantTable;
-import com.example.dine_in_order_api.model.Staff;
-import com.example.dine_in_order_api.model.User;
+import com.example.dine_in_order_api.model.*;
+import com.example.dine_in_order_api.repository.RestaurentRepository;
 import com.example.dine_in_order_api.repository.TableRepository;
 import com.example.dine_in_order_api.repository.UserRepository;
 import com.example.dine_in_order_api.security.util.UserIentity;
 import com.example.dine_in_order_api.service.UserService;
 import lombok.AllArgsConstructor;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,21 +33,21 @@ public class UserServiceImp implements UserService{
     private final TableRepository tableRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserIentity userIentity;
+    private final RestaurentRepository restaurentRepository;
 
     @Override
     public UserResponce registration(UserRegistrationRequest registrationRequest) {
-        User user = this.getUser(registrationRequest.getUserrole());
-        if(user instanceof Staff){
-            List<RestaurantTable> tableList = tableRepository.findAll();
-        }
+        Admin user = new Admin();
+
         userMapper.mapToUserEntity(registrationRequest, user);
+
         encryptPassword(user);
+
+        user.setUserrole(UserRole.ADMIN);
+
         return userMapper.mapToUserResponce(userRepository.save(user));
     }
-    private void encryptPassword(User user){
-       String encodedPassword =  passwordEncoder.encode(user.getPassword());
-       user.setPassword(encodedPassword);
-    }
+
     @Override
     public UserResponce findById() {
         User user = userIentity.getCurrentUser();
@@ -58,21 +62,32 @@ public class UserServiceImp implements UserService{
          return userMapper.mapToUserResponce(userRepository.save(user));
     }
 
-    /**
-     *
-     * produce and return child instance of the user based on the user role
-     *
-     * @param role role of the user
-     * @return User the parent reference containing either of STAFF or ADMIN instance
-     */
+    @Override
+    public UserResponce staffRegistration(UserRegistrationRequest registrationRequest, long id) {
 
-    private User getUser(UserRole role) {
-        User user2;
-        switch(role){
-            case ADMIN ->user2 = new Admin();
-            case STAFF ->user2 = new Staff();
-            default -> throw new RuntimeException("Failed to register user, Invaild user type");
+        Restaurent restaurant = restaurentRepository.findById(id)
+                .orElseThrow(() -> new RestaurantNotFoundException(
+                        "No restaurant found,Enter valid restaurant id"));
+
+        if(restaurant.getCreatedBy().equals(userIentity.getCurrentUserEmail())){
+            Staff user = new Staff();
+            userMapper.mapToUserEntity(registrationRequest, user);
+            encryptPassword(user);
+            user.setUserrole(UserRole.STAFF);
+            user.setRestaurent(restaurant);
+            user.setRestaurantTables(new ArrayList<>(restaurant.getRestaurantTables()));
+            return userMapper.mapToUserResponce(userRepository.save(user));
+           }
+        else{
+            throw new IllegalRequestException(
+                    "Access denied: You are not authorized add staff at "+restaurant.getName());
         }
-        return user2;
     }
+
+
+    private void encryptPassword(User user){
+        String encodedPassword =  passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+    }
+
 }

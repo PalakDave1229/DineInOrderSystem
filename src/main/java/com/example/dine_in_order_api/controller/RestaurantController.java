@@ -37,7 +37,7 @@ public class RestaurantController {
             }
     )
     public ResponseEntity<ResponseStructure<RestaurestResponse>>
-    createRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest){
+        createRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest){
 
         RestaurestResponse restaurestResponse =
                 restaurentService.createRestaurant(restaurantRequest);
