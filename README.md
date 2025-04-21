@@ -46,3 +46,37 @@ Actors/Entities are inspired by the real-world actors interacting with a restaur
 5. **User** used mainly for authentication and authorization has attributes:
 * unique primary key user_id, Authorization--> (STAFF/ADMIN), Username, Password. 
 
+## 📊 ER Diagram
+
+```plaintext
++-------------+       +-------------+       +-------------+
+|  Customer   |       |    Order    |       |  MenuItem   |
+|-------------|       |-------------|       |-------------|
+| customer_id |◄──────| customer_id |       | item_id     |
+| name        |       | order_id    |──────►| name        |
+| email       |       | table_num   |       | description |
+| age         |       | total_amt   |       | price       |
+| phone       |       | timestamp   |       | available   |
++-------------+       | status      |       | createdOn   |
+                      +-------------+       | updatedOn   |
+                            ▲               | status      |
+                            │               +-------------+
+                            │
+                     +-------------+
+                     | OrderItem   |
+                     |-------------|
+                     | order_item_id|
+                     | order_id     |
+                     | menu_item_id |
+                     | quantity     |
+                     +-------------+
+
+         +-------------+
+         |    User     |
+         |-------------|
+         | user_id     |
+         | username    |
+         | password    |
+         | auth_role   |
+         +-------------+
+
